@@ -15,6 +15,7 @@ import AuthLayout from "./layout/AuthLayout";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthProvider";
 import AuditivaRoutes from "./routes/AuditivaRoutes";
+import VisualRoutes from "./routes/VisualRoutes";
 
 export default function App() {
 
@@ -33,6 +34,7 @@ export default function App() {
             :
             <>
               {accessibilityType === "auditiva" && <Route index path="/*" element={<AuditivaRoutes />}/>}
+              {accessibilityType === "visual" && <Route index path="/*" element={<VisualRoutes />}/>}
             </>
           }
 

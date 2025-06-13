@@ -4,7 +4,7 @@ import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 
-function Header({ custom = false, back = true, icon, color, title, desc}) {
+function LinearHeader({ custom = false, back = true, icon, color, title, desc}) {
 
   const navigate = useNavigate()
 
@@ -23,17 +23,19 @@ function Header({ custom = false, back = true, icon, color, title, desc}) {
       </header>
       <div className="flex justify-center mt-3">
         {!custom ?
-          <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-7 flex flex-col items-center mb-3">
-            <div className="flex flex-col items-center mb-3">
+          <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center mb-3">
+            <div className="flex w-full gap-2 items-center mb-2">
               <img
                 src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg"
                 alt="Avatar do Aluno"
                 className="w-16 h-16 rounded-full border-4 border-[#E4EDFB] object-cover mb-2"
               />
-              <h2 className="text-lg font-bold text-[#233366]">Olá, João Pedro!</h2>
-              <span className="text-xs text-[#6D7B97] mt-1">Aluno do 7º ano • Turma B</span>
+              <div className='flex-1'>
+                <h2 className="text-lg font-bold text-[#233366]">Olá, João Pedro!</h2>
+                <span className="text-xs text-[#6D7B97] mt-1">Aluno do 7º ano • Turma B</span>
+              </div>
             </div>
-            <div className="mt-3 flex items-center gap-2 bg-[#E4EDFB] rounded-lg px-3 py-1">
+            <div className="flex items-center gap-2 bg-[#E4EDFB] rounded-lg px-3 py-1">
               <FaEyeSlash className="text-[#3653B4] text-base" />
               <span className="text-xs text-[#3653B4] font-semibold">Deficiência Auditiva</span>
               <span className="text-xs text-[#A4B1C8] ml-1">(Leitura e Visuais)</span>
@@ -56,4 +58,4 @@ function Header({ custom = false, back = true, icon, color, title, desc}) {
   );
 }
 
-export default Header;
+export default LinearHeader;

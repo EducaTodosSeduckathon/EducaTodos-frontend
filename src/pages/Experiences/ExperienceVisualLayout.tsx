@@ -6,7 +6,7 @@ import { AuthContext } from "../../context/AuthProvider";
 import VLibras from "../../components/experiences/auditiva/VLibras";
 import LinearHeader from "../../components/common/LinearHeader";
 
-const ExperienceLayout: React.FC = () => {
+const ExperienceVisualLayout: React.FC = () => {
 
   const [ headerOptions, setHeaderOptions ] = useState({});
   const parent = useRef(null)
@@ -19,13 +19,11 @@ const ExperienceLayout: React.FC = () => {
 
   return (
     <>
-      <div ref={parent} className="h-screen overflow-hidden">
-        {accessibilityType == 'visual' ?
+      <div ref={parent} className="h-screen flex flex-col">
         <LinearHeader {...headerOptions}/>
-        :
-        <Header {...headerOptions}/>
-        }
-        <Outlet context={{setHeaderOptions}} />
+        <div className="flex-1">
+          <Outlet context={{setHeaderOptions}} />
+        </div>
       </div>
       <VLibras enabled={accessibilityType == 'auditiva'} />
 
@@ -33,4 +31,4 @@ const ExperienceLayout: React.FC = () => {
   );
 };
 
-export default ExperienceLayout;
+export default ExperienceVisualLayout;
