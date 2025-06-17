@@ -26,16 +26,16 @@ export default function VerticalCarousel({ items, onSwipe }) {
   });
 
   return (
-    <div className="w-full h-full overflow-hidden relative border rounded">
+    <div className="w-full h-full overflow-hidden relative rounded">
       <div
         {...handlers}
-        className="transition-transform duration-500 h-full"
+        className="relative transition-transform duration-500 h-full"
         style={{
           transform: `translateY(-${activeIndex * 100}%)`,
         }}
       >
         {items.map(({ id, nome, descricao, cor, icone }, index) => (
-          <div onClick={() => navigate('/materias/portugues/conteudos')} key={id} className="bg-white rounded-2xl p-4 h-full shadow-sm flex flex-col justify-center items-center gap-3">
+          <div onClick={() => navigate('/materias/portugues/conteudos')} key={id} className={`absolute left-0 bg-white rounded-2xl p-4 h-full w-full shadow-sm flex flex-col justify-center items-center gap-3`} style={{top: `${index*100}%`}}>
             <div className="flex items-center justify-center w-12 h-12 rounded-full text-xl shrink-0" style={{ backgroundColor: `${cor}1A`, color: cor }}>
               {icone}
             </div>

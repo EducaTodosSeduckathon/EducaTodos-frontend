@@ -4,7 +4,7 @@ import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 
-function LinearHeader({ custom = false, back = true, icon, color, title, desc}) {
+function LinearHeader({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityDescription = 'Leitura e Libras'}) {
 
   const navigate = useNavigate()
 
@@ -37,8 +37,8 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc}) 
             </div>
             <div className="flex items-center gap-2 bg-[#E4EDFB] rounded-lg px-3 py-1">
               <FaEyeSlash className="text-[#3653B4] text-base" />
-              <span className="text-xs text-[#3653B4] font-semibold">Deficiência Auditiva</span>
-              <span className="text-xs text-[#A4B1C8] ml-1">(Leitura e Visuais)</span>
+              <span className="text-xs text-[#3653B4] font-semibold">Deficiência {accessibility}</span>
+              <span className="text-xs text-[#A4B1C8] ml-1">({accessibilityDescription})</span>
             </div>
           </section>
           :

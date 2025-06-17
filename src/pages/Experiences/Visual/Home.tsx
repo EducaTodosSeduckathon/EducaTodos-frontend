@@ -24,6 +24,7 @@ import Carousel from "../../../components/experiences/visual/VerticalCarousel";
 import VerticalCarousel from "../../../components/experiences/visual/VerticalCarousel";
 import { speak } from "../../../services/utils";
 import { useSpeech } from "react-text-to-speech";
+import Swiper from "swiper";
 
 const materias = [
   {
@@ -85,6 +86,8 @@ export default function Home() {
   useEffect(() => {
     setHeaderOptions({
       custom: false,
+      accessibility: 'Visual',
+      accessibilityDescription: 'Gestos e Áudio',
     });
 
     start();
@@ -101,10 +104,10 @@ export default function Home() {
 
   const navigate = useNavigate();
   return (
-    <div className="bg-[#F6F8FB] flex flex-col h-full">
-      <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
+    <div className="bg-[#F6F8FB] flex flex-col h-full w-full">
+      <main className="flex-1 flex flex-col items-center px-3 pt-4 pb-3">
 
-        <section className="w-full max-w-xs flex-1 flex flex-col">
+        <section className="w-full flex-1 flex flex-col">
           <div className="flex flex-row items-center justify-between mb-4">
             <h3 className="text-base font-bold text-[#233366]">Matérias</h3>
           </div>
