@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaEyeSlash, FaSchool } from 'react-icons/fa';
 import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
+import { AuthContext } from '../../context/AuthProvider';
 
 function Header({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityDescription = 'Leitura e Libras'}) {
 
   const navigate = useNavigate()
+
+  const { logout } = useContext(AuthContext);
 
   return (
     <>
@@ -18,7 +21,7 @@ function Header({ custom = false, back = true, icon, color, title, desc, accessi
           <FaChevronLeft className='text-brand-500'/>
         </button>
         <img src={Logo} className="h-[40px]" />
-        <button type="button" className="w-10 h-10 bg-red-100 text-red-500 rounded-2xl grid place-content-center text-sm font-medium">Sair</button>
+        <button type="button" onClick={() => logout()} className="w-10 h-10 bg-red-100 text-red-500 rounded-2xl grid place-content-center text-sm font-medium">Sair</button>
 
       </header>
       <div className="flex justify-center mt-3">

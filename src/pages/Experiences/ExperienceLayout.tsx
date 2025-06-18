@@ -19,7 +19,7 @@ const ExperienceLayout: React.FC = () => {
 
   return (
     <>
-      <div ref={parent} className="h-screen overflow-hidden">
+      <div ref={parent} className="min-h-screen overflow-hidden">
         {accessibilityType == 'visual' ?
         <LinearHeader {...headerOptions}/>
         :
