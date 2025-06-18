@@ -29,7 +29,7 @@ import AuditivaQuestions from "./pages/Experiences/Auditiva/Questions";
 import ClientLayout from "./layout/AuthLayout";
 import AuthLayout from "./layout/AuthLayout";
 
-export default function App() {
+export default function App2() {
   return (
     <>
       <Router>
@@ -39,16 +39,7 @@ export default function App() {
             <Route index path="" element={<Home />} />
           </Route>
 
-          <Route index path="home" element={<AuditivaHome />} />
-          <Route index path="home/materia" element={<AuditivaMateria />} />
-          <Route index path="home/menu" element={<AuditivaContentMenu />} />
-          <Route index path="home/resume" element={<AuditivaResume />} />
-          <Route index path="home/extras" element={<AuditivaExtras />} />
-          <Route index path="home/questao" element={<AuditivaQuestions />} />
-          {/* <Route path={'home'} element={<ExperienceLayout />}>
-
-          </Route> */}
-
+          
           {/* Dashboard Layout */}
           <Route path="admin" element={<AppLayout />}>
             {/* <Route index path="" element={<Home />} /> */}
