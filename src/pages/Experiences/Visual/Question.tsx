@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { speak } from '../../../services/utils';
+import { useSpeech } from '../../../hooks/useSpeech';
+import VerticalCarousel from '../../../components/experiences/visual/VerticalCarousel';
+import { useNavigate } from 'react-router';
 
 const questions = [
   {
@@ -32,8 +36,11 @@ const questions = [
 
 export default function QuestionCard() {
   const [current, setCurrent] = useState(0);
+  const [currentAnswer, setCurrentAnswer] = useState(0);
   const [selected, setSelected] = useState(null);
   const [showFeedback, setShowFeedback] = useState(false);
+
+  const [ showAnswers, setShowAnswers ] = useState(false);
 
   const question = questions[current];
   const progressPercent = ((current + 1) / questions.length) * 100;
@@ -42,6 +49,8 @@ export default function QuestionCard() {
     setSelected(index);
     setShowFeedback(true);
   }
+
+  const navigate = useNavigate();
 
   function handleNext() {
     if (selected === null) {
@@ -53,7 +62,8 @@ export default function QuestionCard() {
       setSelected(null);
       setShowFeedback(false);
     } else {
-      alert("Parabéns! Você terminou as questões.");
+      speech.speak("Parabéns! Você terminou as questões! Voltando para a página inicial");
+      navigate('/')
       // Aqui pode redirecionar ou resetar o quiz
     }
   }
@@ -66,8 +76,31 @@ export default function QuestionCard() {
     }
   }
 
+  const speech = useSpeech();
+  const handleClick = () => {
+    if(!showAnswers){
+      speech.speak('Questão ' + (current+1) + '. ' + question.question)
+    }else{
+
+    }
+  }
+  const handleDoubleClick = () => {
+    speech.cancel()
+    if(showAnswers){
+      handleNext()
+      setShowAnswers(false);
+    }else{
+      setShowAnswers(true);
+    }
+  }
+
+  const handleSwipe = (index) => {
+    const letters = ['A', 'B', 'C', 'D', 'E'];
+    speech.speak('Letra ' + letters[index] + ', ' + question.options[index]);
+  }
+
   return (
-    <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-5 py-6 flex flex-col gap-4 mb-4">
+    <section onClick={handleClick} onDoubleClick={handleDoubleClick} className="w-full h-full bg-white rounded-2xl shadow-lg px-5 py-6 flex flex-col gap-4 mb-4">
 
       {/* Progress */}
       <div className="flex items-center gap-2 mb-2">
@@ -83,10 +116,17 @@ export default function QuestionCard() {
       </div>
 
       {/* Pergunta e opções */}
-      <div className="flex flex-col gap-3">
+      {!showAnswers ? <div className="flex flex-col gap-3">
         <h2 className="text-base font-bold text-[#233366] mb-1">{question.question}</h2>
-        <ul className="flex flex-col gap-3">
-          {question.options.map((option, i) => {
+      </div>
+      :
+      <ul className="flex flex-1 flex-col gap-3">
+        <VerticalCarousel onSwipe={handleSwipe} canGoBack={false} items={question.options.map(q => ({
+          title: q,
+          onSelect: handleSelectAnswer,
+          Component: AnswerCard
+        }))} />
+          {/* {question.options.map((option, i) => {
             const isSelected = selected === i;
             // Define as cores conforme índice (como no seu exemplo)
             const borderColor = i === 0 ? 'border-[#F6B800] text-[#F6B800]' :
@@ -111,57 +151,37 @@ export default function QuestionCard() {
                 </button>
               </li>
             );
-          })}
+          })} */}
         </ul>
-      </div>
+      }
 
-      {/* Feedback */}
-      {showFeedback && (
-        <div className="mt-3 flex items-center justify-center gap-2">
-          {selected === question.answer ? (
-            <>
-              <i className="fa-solid fa-circle-check text-[#30C185] text-xl"></i>
-              <span className="text-sm font-semibold text-[#30C185]">Resposta correta!</span>
-            </>
-          ) : (
-            <>
-              <i className="fa-solid fa-circle-xmark text-[#F87171] text-xl"></i>
-              <span className="text-sm font-semibold text-[#F87171]">Resposta incorreta.</span>
-            </>
-          )}
-        </div>
-      )}
 
-      {/* Controles */}
-      <div className="w-full flex items-center justify-between gap-2 mt-4">
-        <button
-          onClick={handleBack}
-          disabled={current === 0}
-          className={`flex items-center gap-2 bg-transparent px-4 py-2 rounded-lg text-[#3653B4] font-semibold text-sm hover:underline
-            ${current === 0 ? 'opacity-50 cursor-not-allowed' : ''}
-          `}
-        >
-          <i className="fa-solid fa-arrow-left text-base"></i>
-          Anterior
-        </button>
-
-        <button
-          onClick={handleNext}
-          className="flex items-center gap-2 bg-[#F6B800] text-white font-semibold text-sm px-4 py-2 rounded-lg shadow hover:bg-[#e5ac00] transition"
-        >
-          {current === questions.length - 1 ? (
-            <>
-              Finalizar
-              <i className="fa-solid fa-check text-base"></i>
-            </>
-          ) : (
-            <>
-              Próxima
-              <i className="fa-solid fa-arrow-right text-base"></i>
-            </>
-          )}
-        </button>
-      </div>
     </section>
+  );
+}
+
+function AnswerCard ({title, index, onSelect}){
+  // Define as cores conforme índice (como no seu exemplo)
+  
+  const borderColor = index === 0 ? 'border-[#F6B800] text-[#F6B800]' :
+                      index === 1 ? 'border-[#3653B4] text-[#3653B4]' :
+                      'border-[#30C185] text-[#30C185]';
+
+  return (
+    <li className='h-full'>
+      <button
+        onClick={() => onSelect(index)}
+        className={`
+          w-full h-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold
+          border border-[#E4EDFB] bg-[#F6F8FB] text-[#233366]
+          hover:bg-[#E4EDFB] transition focus:ring-2 focus:ring-[#3653B4]
+        `}
+      >
+        <span className={`w-7 h-7 rounded-full border-2 ${borderColor} flex items-center justify-center font-bold`}>
+          {String.fromCharCode(65 + index)}
+        </span>
+        <span>{title}</span>
+      </button>
+    </li>
   );
 }

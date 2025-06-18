@@ -11,12 +11,12 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
   return (
     <>
       <header className="sticky top-0 w-full px-5 py-2 bg-white shadow-sm flex justify-between">
-        <button 
+       {back ? <button 
           type="button"
           onClick={() => navigate(-1)}
           className='w-10 h-10 bg-brand-100 rounded-2xl grid place-content-center'>
           <FaChevronLeft className='text-brand-500'/>
-        </button>
+        </button> : <div className="w-10 h-10"></div>}
         <img src={Logo} className="h-[40px]" />
         <button type="button" className="w-10 h-10 bg-red-100 text-red-500 rounded-2xl grid place-content-center text-sm font-medium">Sair</button>
 
