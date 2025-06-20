@@ -20,7 +20,9 @@ import IntelectualRoutes from "./routes/IntelectualRoutes";
 import MotoraRoutes from "./routes/MotoraRoutes";
 import AppLayout from "./layout/AppLayout";
 import UserProfiles from "./pages/UserProfiles";
-import Disciplinas from "./pages/Tables/Disciplinas";
+import Disciplinas from "./pages/Admin/Disciplinas/Disciplinas";
+import DisciplinaDetails from "./pages/Admin/Disciplinas/DisciplinaDetails";
+import EditConteudo from "./pages/Admin/Conteudos/EditConteudo";
 
 export default function App() {
 
@@ -46,6 +48,12 @@ export default function App() {
               <Route path="admin" element={<AppLayout />}>
                 {/* <Route index path="" element={<Home />} /> */}
 
+                <Route path="/admin/disciplinas" element={<Disciplinas />} />
+                <Route path="/admin/disciplinas/:disciplinaId" element={<DisciplinaDetails />} />
+                <Route path="/admin/disciplinas/:disciplinaId/conteudo/" element={<EditConteudo />} />
+                <Route path="/admin/disciplinas/:disciplinaId/conteudo/:id" element={<EditConteudo />} />
+
+
                 {/* Others Page */}
                 <Route path="/admin/profile" element={<UserProfiles />} />
                 {/* <Route path="/admin//calendar" element={<Calendar />} />
@@ -55,7 +63,6 @@ export default function App() {
                 {/* <Route path="/admin//form-elements" element={<FormElements />} />
 
                 {/* Tables */}
-                <Route path="/admin/disciplinas" element={<Disciplinas />} />
 
                 {/* Ui Elements */}
                 {/* <Route path="/admin//alerts" element={<Alerts />} />

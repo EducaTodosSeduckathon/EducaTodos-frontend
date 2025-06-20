@@ -1,10 +1,12 @@
 import { Link } from "react-router";
+import Badge from "../ui/badge/Badge";
 
 interface BreadcrumbProps {
   pageTitle: string;
+  pageBadge?: string
 }
 
-const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
+const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, pageBadge }) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
       <h2
@@ -12,6 +14,10 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
         x-text="pageName"
       >
         {pageTitle}
+        {pageBadge &&
+        <Badge color="primary" size="sm">
+        {pageBadge}
+      </Badge>}
       </h2>
       <nav>
         <ol className="flex items-center gap-1.5">
