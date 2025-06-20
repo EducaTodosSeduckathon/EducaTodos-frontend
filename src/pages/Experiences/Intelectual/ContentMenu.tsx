@@ -16,95 +16,91 @@ import {
   FaChevronRight,
   FaXmark,
   FaRegCopyright,
-  FaEyeSlash
+  FaEyeSlash,
+  FaFileLines,
+  FaFolderOpen,
+  FaQuestion,
+  FaFile
 } from 'react-icons/fa6';
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 
 const materias = [
   {
-    id: 'portugues',
-    nome: 'Português',
-    descricao: 'Leitura, gramática e redação',
+    id: 'resume',
+    nome: 'Resumo do conteúdo',
+    descricao: 'Principais conceitos, definições e exemplos',
     cor: '#2F80ED',
-    icone: <FaBookOpen />,
+    icone: <FaFileLines />,
   },
   {
-    id: 'matematica',
-    nome: 'Matemática',
-    descricao: 'Números, operações e lógica',
-    cor: '#FFB946',
-    icone: <FaSquareRootVariable />,
-  },
-  {
-    id: 'ciencias',
-    nome: 'Ciências',
-    descricao: 'Natureza, experiências e descobertas',
+    id: 'extras',
+    nome: 'Materiais Complementares',
+    descricao: 'Apostilas, vídeos e links úteis',
     cor: '#21C87A',
-    icone: <FaFlaskVial />,
+    icone: <FaFolderOpen />,
   },
   {
-    id: 'historia',
-    nome: 'História',
-    descricao: 'Fatos, civilizações e culturas',
+    id: 'questions',
+    nome: 'Questões',
+    descricao: 'Exercícios e desafios para praticar',
     cor: '#ED5555',
-    icone: <FaLandmark />,
-  },
-  {
-    id: 'geografia',
-    nome: 'Geografia',
-    descricao: 'Territórios, clima e mapas',
-    cor: '#8B5CF6',
-    icone: <FaEarthAmericas />,
+    icone: <FaQuestion />,
   },
 ];
 
-export default function Home() {
+export default function Materia() {
+
+  const { setHeaderOptions } = useOutletContext();
 
   const [materiaLibras, setMateriaLibras] = useState(null);
 
   const abrirLibras = (nome) => setMateriaLibras(nome);
   const fecharLibras = () => setMateriaLibras(null);
 
-  const { setHeaderOptions } = useOutletContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setHeaderOptions({
-      custom: false,
-      back: false
+      custom: true,
+      icon: <FaFile/>,
+      color: '#465fff',
+      title: 'Conteúdo',
+      desc: 'Ortografia'
     });
-  }, []);
+  }, [])
 
-  const navigate = useNavigate();
   return (
     <div className="bg-[#F6F8FB] flex flex-col justify-between">
+
       <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
 
         <section className="w-full max-w-xs flex flex-col">
           <div className="flex flex-row items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-[#233366]">Matérias</h3>
+            <h3 className="text-base font-bold text-[#233366]">Conteúdos</h3>
           </div>
           <div className="flex flex-col gap-3">
-          {materias.map(({ id, nome, descricao, cor, icone }) => (
-              <div onClick={() => navigate('/materias/portugues/conteudos')} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full text-xl shrink-0" style={{ backgroundColor: `${cor}1A`, color: cor }}>
-                  {icone}
-                </div>
-                <div className="flex flex-col flex-1">
-                  <span className="font-semibold text-[#253858] text-base">{nome}</span>
-                  <span className="text-xs text-[#7B8794]">{descricao}</span>
-                </div>
-                <button
-                  className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-xs font-semibold active:bg-[#21C87A]/20"
-                  onClick={() => abrirLibras(nome)}
-                >
-                  <FaHandSparkles /> Libras
-                </button>
-                <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
-                  <FaChevronRight />
-                </button>
-              </div>
-            ))}
+            <SubjectButton
+              title='Resumo do conteúdo'
+              subtitle='Principais conceitos, definições e exemplos'
+              onClick={() => navigate('/materias/portugues/conteudos/ortografia/resumo')}
+              color='#21C87A'
+              icon={<FaFolderOpen />}
+            />
+            <SubjectButton
+              title='Materiais Complementares'
+              subtitle='Apostilas, vídeos e links úteis'
+              onClick={() => navigate('/materias/portugues/conteudos/ortografia/extras')}
+              color='#2F80ED'
+              icon={<FaFileLines />}
+            />
+            <SubjectButton
+              title='Questões'
+              subtitle='Exercícios e desafios para praticar'
+              onClick={() => navigate('/materias/portugues/conteudos/ortografia/questoes')}
+              color='#ED5555'
+              icon={<FaQuestion />}
+            />
           </div>
         </section>
 
@@ -149,18 +145,26 @@ export default function Home() {
   );
 }
 
-function SubjectButton({ icon, bgColor, title, subtitle, chevronColor }: any) {
+function SubjectButton({ icon, onClick, abrirLibras, color, title, subtitle }: any) {
   return (
-    <button
-      className={`flex items-center gap-3 ${bgColor} rounded-xl py-3 px-4 focus:ring-2 transition cursor-pointer w-full`}
-    >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white">{icon}</div>
-      <div className="flex flex-col flex-1 items-start">
-        <span className="text-base font-semibold text-[#233366]">{title}</span>
-        <span className="text-xs text-[#6D7B97]">{subtitle}</span>
+    <div onClick={onClick} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
+      <div className="flex items-center justify-center w-12 h-12 rounded-full text-xl shrink-0" style={{ backgroundColor: `${color}1A`, color: color }}>
+        {icon}
       </div>
-      <FaChevronRight className={`text-[${chevronColor}]`} />
-    </button>
+      <div className="flex flex-col flex-1">
+        <span className="font-semibold text-[#253858] text-base">{title}</span>
+        <span className="text-xs text-[#7B8794]">{subtitle}</span>
+      </div>
+      <button
+        className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-2xl font-semibold active:bg-[#21C87A]/20"
+        onClick={() => abrirLibras()}
+      >
+        <FaHandSparkles />
+      </button>
+      <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
+        <FaChevronRight />
+      </button>
+    </div>
   );
 }
 

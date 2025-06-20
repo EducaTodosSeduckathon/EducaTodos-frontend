@@ -74,14 +74,13 @@ function LoginForm({ role, onSuccess }) {
 
         <form className="flex flex-col gap-4 mt-2">
           <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-xs text-[#233366] font-medium">E-mail</label>
+            <label htmlFor="email" className="text-xs text-[#233366] font-medium">{activeTab == 'student' ? 'RA (matrícula)' : "E-mail"}</label>
             <div className="relative">
               <input
-                type="email"
+                type={activeTab == 'student' ? 'text' : "email"}
                 id="email"
                 className="w-full rounded-lg border border-[#E8EBF0] focus:border-[#3653B4] transition px-4 py-2 text-sm bg-[#F6F8FB] placeholder-[#A4B1C8] focus:outline-none"
-                placeholder="seu@email.com"
-                autoComplete="email"
+                placeholder={activeTab == 'student' ? 'Seu RA' : "Seu e-mail"}
               />
               <FaEnvelope className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A4B1C8] text-sm" />
             </div>

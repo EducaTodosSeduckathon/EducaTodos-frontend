@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }: Props) => {
   const login = async (email: string, password: string, remember = false) => {
     setAuthenticated(true);
     setToken('fdsfgsdg');
+    window.location.href = '/';
     return;
     const { data } = await api.post('jwt-auth/v1/token', {
       username: email,

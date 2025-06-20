@@ -16,7 +16,8 @@ import {
   FaChevronRight,
   FaXmark,
   FaRegCopyright,
-  FaEyeSlash
+  FaEyeSlash,
+  FaBrain
 } from 'react-icons/fa6';
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -71,7 +72,10 @@ export default function Home() {
   useEffect(() => {
     setHeaderOptions({
       custom: false,
-      back: false
+      back: false,
+      accessibility: 'Intelectual',
+      accessibilityIcon: <FaBrain />,
+      accessibilityDescription: 'Apoio'
     });
   }, []);
 

@@ -4,8 +4,9 @@ import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthProvider';
+import { FaEarDeaf } from 'react-icons/fa6';
 
-function Header({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityDescription = 'Leitura e Libras'}) {
+function Header({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityIcon = <FaEarDeaf/>, accessibilityDescription = 'Leitura e Libras'}) {
 
   const navigate = useNavigate()
 
@@ -14,12 +15,12 @@ function Header({ custom = false, back = true, icon, color, title, desc, accessi
   return (
     <>
       <header className="sticky top-0 w-full px-5 py-2 bg-white shadow-sm flex justify-between">
-        <button 
+        {back ? <button 
           type="button"
           onClick={() => navigate(-1)}
           className='w-10 h-10 bg-brand-100 rounded-2xl grid place-content-center'>
           <FaChevronLeft className='text-brand-500'/>
-        </button>
+        </button> : <div className="w-10 h-10"></div>}
         <img src={Logo} className="h-[40px]" />
         <button type="button" onClick={() => logout()} className="w-10 h-10 bg-red-100 text-red-500 rounded-2xl grid place-content-center text-sm font-medium">Sair</button>
 
@@ -37,7 +38,9 @@ function Header({ custom = false, back = true, icon, color, title, desc, accessi
               <span className="text-xs text-[#6D7B97] mt-1">Aluno do 7º ano • Turma B</span>
             </div>
             <div className="mt-3 flex items-center gap-2 bg-[#E4EDFB] rounded-lg px-3 py-1">
-              <FaEyeSlash className="text-[#3653B4] text-base" />
+              <div className='text-sm text-brand-800'>
+              {accessibilityIcon}
+              </div>
               <span className="text-xs text-[#3653B4] font-semibold">Deficiência {accessibility}</span>
               <span className="text-xs text-[#A4B1C8] ml-1">({accessibilityDescription})</span>
             </div>

@@ -16,50 +16,53 @@ import {
   FaChevronRight,
   FaXmark,
   FaRegCopyright,
-  FaEyeSlash
+  FaEyeSlash,
+  FaFileLines,
+  FaFolderOpen,
+  FaQuestion
 } from 'react-icons/fa6';
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import Question from "./Question";
+import { useOutletContext } from "react-router";
 
 const materias = [
   {
-    id: 'portugues',
-    nome: 'Português',
-    descricao: 'Leitura, gramática e redação',
-    cor: '#2F80ED',
-    icone: <FaBookOpen />,
-  },
-  {
-    id: 'matematica',
-    nome: 'Matemática',
-    descricao: 'Números, operações e lógica',
-    cor: '#FFB946',
-    icone: <FaSquareRootVariable />,
-  },
-  {
-    id: 'ciencias',
-    nome: 'Ciências',
-    descricao: 'Natureza, experiências e descobertas',
-    cor: '#21C87A',
-    icone: <FaFlaskVial />,
-  },
-  {
-    id: 'historia',
-    nome: 'História',
-    descricao: 'Fatos, civilizações e culturas',
-    cor: '#ED5555',
-    icone: <FaLandmark />,
-  },
-  {
-    id: 'geografia',
-    nome: 'Geografia',
-    descricao: 'Territórios, clima e mapas',
-    cor: '#8B5CF6',
-    icone: <FaEarthAmericas />,
+    nome: 'Resumo: Capítulo 2 – Comunicação Oral e Escrita',
+    descricao: 'Neste capítulo, você aprenderá sobre as diferenças entre a comunicação oral e escrita, como se expressar melhor em diferentes situações e a importância do contexto na linguagem. A comunicação oral envolve conversas, debates e apresentações, enquanto a escrita está presente em redações, bilhetes e textos formais.',
   },
 ];
 
-export default function Home() {
+const questions = [
+  {
+    question: "O que é comunicação oral?",
+    options: [
+      "Falar, conversar ou apresentar ideias com a voz.",
+      "Escrever textos em um caderno.",
+      "Desenhar figuras para se comunicar."
+    ],
+    answer: 0
+  },
+  {
+    question: "Qual é o principal objetivo da comunicação escrita?",
+    options: [
+      "Ouvir músicas.",
+      "Registrar ideias para serem lidas depois.",
+      "Falar em público."
+    ],
+    answer: 1
+  },
+  {
+    question: "Onde usamos mais a comunicação oral?",
+    options: [
+      "Em conversas e apresentações.",
+      "Ao escrever cartas.",
+      "Ao desenhar no quadro."
+    ],
+    answer: 0
+  }
+];
+
+export default function Questions({ icone = <FaQuestion />, cor = '#ED5555'}) {
 
   const [materiaLibras, setMateriaLibras] = useState(null);
 
@@ -70,53 +73,22 @@ export default function Home() {
 
   useEffect(() => {
     setHeaderOptions({
-      custom: false,
-      back: false
+      custom: true,
+      color: cor,
+      icon: icone,
+      title: 'Questões',
+      desc: 'Teste seu conhecimento'
     });
   }, []);
 
-  const navigate = useNavigate();
   return (
     <div className="bg-[#F6F8FB] flex flex-col justify-between">
       <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
-
         <section className="w-full max-w-xs flex flex-col">
-          <div className="flex flex-row items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-[#233366]">Matérias</h3>
-          </div>
-          <div className="flex flex-col gap-3">
-          {materias.map(({ id, nome, descricao, cor, icone }) => (
-              <div onClick={() => navigate('/materias/portugues/conteudos')} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full text-xl shrink-0" style={{ backgroundColor: `${cor}1A`, color: cor }}>
-                  {icone}
-                </div>
-                <div className="flex flex-col flex-1">
-                  <span className="font-semibold text-[#253858] text-base">{nome}</span>
-                  <span className="text-xs text-[#7B8794]">{descricao}</span>
-                </div>
-                <button
-                  className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-xs font-semibold active:bg-[#21C87A]/20"
-                  onClick={() => abrirLibras(nome)}
-                >
-                  <FaHandSparkles /> Libras
-                </button>
-                <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
-                  <FaChevronRight />
-                </button>
-              </div>
-            ))}
-          </div>
+          <Question
+          />
         </section>
 
-        <section className="flex flex-col items-center mt-4">
-          <span className="text-xs text-[#4F5B69] mb-1 text-center">
-            Toque no botão
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#21C87A]/10 rounded-md text-[#21C87A] font-bold ml-1">
-              <FaHandSparkles /> Libras
-            </span>
-            para assistir à explicação em Língua Brasileira de Sinais.
-          </span>
-        </section>
       </main>
 
       <Footer />
