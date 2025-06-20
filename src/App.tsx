@@ -27,7 +27,7 @@ import EditConteudo from "./pages/Admin/Conteudos/EditConteudo";
 export default function App() {
 
 
-  const { accessibilityType, authenticated } = useContext(AuthContext);
+  const { role, accessibilityType, authenticated } = useContext(AuthContext);
 
   return (
     <>
@@ -40,10 +40,12 @@ export default function App() {
             </Route>
             :
             <>
+            {role == 'student' && <>
               {accessibilityType === "auditiva" && <Route index path="/*" element={<AuditivaRoutes />}/>}
               {accessibilityType === "visual" && <Route index path="/*" element={<VisualRoutes />}/>}
               {accessibilityType === "motora" && <Route index path="/*" element={<MotoraRoutes />}/>}
               {accessibilityType === "intelectual" && <Route index path="/*" element={<IntelectualRoutes />}/>}
+            </>}
 
               <Route path="admin" element={<AppLayout />}>
                 {/* <Route index path="" element={<Home />} /> */}
