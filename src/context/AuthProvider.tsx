@@ -7,6 +7,8 @@ type Props = {
 }
 
 type IAuthContext = {
+  role: string;
+  setRole: (newState: string) => void;
   authenticated: boolean;
   setAuthenticated: (newState: boolean) => void;
   user: any;
@@ -18,6 +20,8 @@ type IAuthContext = {
 }
 
 const initialValue = {
+  role: JSON.parse(localStorage.getItem('role')),
+  setRole: () => {},
   authenticated: !!JSON.parse(localStorage.getItem('access_token')),
   setAuthenticated: () => {},
   user: null,
@@ -33,6 +37,7 @@ export const AuthProvider = ({ children }: Props) => {
   const [ authenticated, setAuthenticated ] = useState(initialValue.authenticated);
   const [ user, setUser ] = useState(initialValue.user);
 
+  const [ role, setRole ] = useLocalStorage('role', '');
   const [ accessibilityType, setAccessibilityType ] = useLocalStorage('accessibility_type', '');
   const [ token, setToken ] = useLocalStorage('access_token', '');
 
@@ -77,7 +82,7 @@ export const AuthProvider = ({ children }: Props) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, setAuthenticated, accessibilityType, setAccessibilityType, user, setUser, login, logout }}>
+    <AuthContext.Provider value={{ role, setRole, authenticated, setAuthenticated, accessibilityType, setAccessibilityType, user, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

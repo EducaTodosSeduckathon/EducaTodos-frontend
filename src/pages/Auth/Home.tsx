@@ -25,14 +25,18 @@ export default function Home() {
   }, [parent]);
 
   const [ step, setStep ] = useState(STEPS.init);
-  const [ role, setRole ] = useState();
 
   const handleSelectRole = (r) => {
     setRole(r);
     setStep(STEPS.login);
   }
 
-  const { login, setAccessibilityType } = useContext(AuthContext);
+  const { role, setRole, login, setAccessibilityType } = useContext(AuthContext);
+
+  const handleLogin = () => {
+
+    setStep(STEPS.choice)
+  }
 
   return (
     <div className="bg-[#F6F8FB] min-h-[700px]">
@@ -42,7 +46,7 @@ export default function Home() {
           <RoleSelection onSelect={handleSelectRole} />
         }
         {step == STEPS.login &&
-          <LoginForm role={role} onSuccess={() => setStep(STEPS.choice)} />
+          <LoginForm role={role} onSelectRole={handleSelectRole} onSuccess={() => handleLogin()} />
         }
         {step == STEPS.choice &&
           <AccessibilityChoice onChoice={(type) => (setAccessibilityType(type), login())} />

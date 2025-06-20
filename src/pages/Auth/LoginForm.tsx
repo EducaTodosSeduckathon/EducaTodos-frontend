@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FaUserTie,
   FaChalkboardTeacher,
@@ -43,8 +43,12 @@ const userTypes = [
   },
 ];
 
-function LoginForm({ role, onSuccess }) {
+function LoginForm({ role, onSelectRole, onSuccess }) {
   const [activeTab, setActiveTab] = useState(role);
+
+  useEffect(() => {
+    onSelectRole(activeTab);
+  }, [ activeTab]);
 
   return (
     <main className="flex-1 flex flex-col justify-center items-center px-5">
