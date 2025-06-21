@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import DropzoneComponent from "../../../../components/form/form-elements/DropZone";
-import RichTextEditor from "../../../../components/form/form-elements/RichTextEditor";
+import DropzoneComponent from "../../../../../components/form/form-elements/DropZone";
+import RichTextEditor from "../../../../../components/form/form-elements/RichTextEditor";
 import { Descendant } from "slate";
 
 const categoriasAcessibilidade = ["Visual", "Auditiva", "Motora", "Intelectual"] as const;

@@ -82,7 +82,7 @@ export default function Questions({ icone = <FaQuestion />, cor = '#ED5555'}) {
   }, []);
 
   return (
-    <div className="bg-[#F6F8FB] flex flex-col justify-between">
+    <div className="flex flex-col justify-between">
       <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
         <section className="w-full max-w-xs flex flex-col">
           <Question
@@ -93,30 +93,6 @@ export default function Questions({ icone = <FaQuestion />, cor = '#ED5555'}) {
 
       <Footer />
 
-      {materiaLibras && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={fecharLibras}>
-          <div className="bg-white rounded-2xl p-6 w-[90vw] max-w-xs flex flex-col items-center shadow-lg relative" onClick={(e) => e.stopPropagation()}>
-            <button className="absolute top-3 right-3 text-[#A0AEC0] text-xl hover:text-[#ED5555] transition" onClick={fecharLibras}>
-              <FaXmark />
-            </button>
-            <div className="flex flex-col items-center mb-3">
-              <FaHandSparkles className="text-3xl text-[#21C87A] mb-2" />
-              <span className="font-semibold text-[#253858] text-lg mb-1">Explicação em Libras</span>
-              <span className="text-xs text-[#7B8794] mb-2">{materiaLibras}</span>
-            </div>
-            <div className="w-full h-44 rounded-xl bg-[#EAF1FB] flex items-center justify-center overflow-hidden mb-2">
-              <img
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/31a4c7ee91-deb763179a2770866fa5.png"
-                alt="pessoa gesticulando em libras"
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <span className="text-xs text-[#4F5B69] text-center">
-              Assista à explicação desse conteúdo em Libras para melhor compreensão.
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

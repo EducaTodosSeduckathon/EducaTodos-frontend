@@ -19,11 +19,12 @@ import {
   FaEyeSlash,
   FaFile
 } from 'react-icons/fa6';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 import VerticalCarousel from "../../../components/experiences/visual/VerticalCarousel";
 import { speak } from "../../../services/utils";
 import useLongClick from "../../../hooks/useLongClick";
+import { AuthContext } from "../../../context/AuthProvider";
 
 
 
@@ -72,13 +73,23 @@ export default function Materia() {
     // console.log("Clique longo detectado!");
   }, { ms: 800 });
 
+  const { themeOptions } = useContext(AuthContext);
+
+  const getTextClass = () => {
+    let classes = "";
+    if (themeOptions?.fontSize === 1.2) classes += " text-lg";
+    if (themeOptions?.fontSize === 1.4) classes += " text-xl";
+    if (themeOptions?.simpleMode) classes += " uppercase";
+    return classes;
+  };
+
   return (
-    <div className="bg-[#F6F8FB] flex flex-col h-full w-full">
+    <div className="flex flex-col h-full w-full">
       <main className="flex-1 flex flex-col items-center px-3 pt-4 pb-3">
 
         <section className="w-full flex-1 flex flex-col">
           <div className="flex flex-row items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-[#233366]">Conteúdos</h3>
+            <h3 className={`text-base font-bold text-[#233366] dark:text-white ${getTextClass()}`}>Conteúdos</h3>
           </div>
           <div className="flex flex-col w-full flex-1 gap-3">
             <VerticalCarousel canGoBack={true} items={materias} onSwipe={handleSwipe}/>

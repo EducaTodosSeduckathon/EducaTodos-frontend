@@ -4,6 +4,7 @@ import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthProvider';
+import VisualAdjustments from '../experiences/visual/VisualAdjustments';
 
 function LinearHeader({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityDescription = 'Leitura e Libras'}) {
 
@@ -13,7 +14,7 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
 
   return (
     <>
-      <header className="sticky top-0 w-full px-5 py-2 bg-white shadow-sm flex justify-between">
+      <header className="sticky top-0 w-full px-5 py-2 bg-white dark:bg-[#000] shadow-sm flex justify-between">
        {back ? <button 
           type="button"
           onClick={() => navigate(-1)}
@@ -43,6 +44,8 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
               <span className="text-xs text-[#3653B4] font-semibold">Deficiência {accessibility}</span>
               <span className="text-xs text-[#A4B1C8] ml-1">({accessibilityDescription})</span>
             </div>
+            <VisualAdjustments/>
+
           </section>
           :
           <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-3 flex flex-col items-center mb-3">

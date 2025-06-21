@@ -15,7 +15,7 @@ const ExperienceLayout: React.FC = () => {
     parent.current && autoAnimate(parent.current)
   }, [parent])
 
-  const { accessibilityType } = useContext(AuthContext);
+  const { role, accessibilityType } = useContext(AuthContext);
 
   return (
     <>
@@ -27,7 +27,7 @@ const ExperienceLayout: React.FC = () => {
         }
         <Outlet context={{setHeaderOptions}} />
       </div>
-      <VLibras enabled={accessibilityType == 'auditiva'} />
+      <VLibras enabled={accessibilityType == 'auditiva' && role == 'student'} />
 
     </>
   );

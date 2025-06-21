@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import Logo from '../images/logov.png';
 // Assume these icons are imported from an icon library
@@ -17,6 +17,8 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
+import { FaCalendarDays, FaComment, FaGraduationCap, FaUsers } from "react-icons/fa6";
+import { AuthContext } from "../context/AuthProvider";
 
 type NavItem = {
   name: string;
@@ -25,7 +27,7 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
-const navItems: NavItem[] = [
+const teacherNavItems: NavItem[] = [
   // {
   //   icon: <GridIcon />,
   //   name: "Dashboard",
@@ -42,11 +44,11 @@ const navItems: NavItem[] = [
     icon: <TableIcon />,
     // subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
   },
-  {
-    icon: <UserCircleIcon />,
-    name: "Configurações",
-    path: "/profile",
-  },
+  // {
+  //   icon: <UserCircleIcon />,
+  //   name: "Configurações",
+  //   path: "/admin/profile",
+  // },
   // {
   //   name: "Forms",
   //   icon: <ListIcon />,
@@ -61,41 +63,57 @@ const navItems: NavItem[] = [
   //   ],
   // },
 ];
-
-const othersItems: NavItem[] = [
-  // {
-  //   icon: <PieChartIcon />,
-  //   name: "Charts",
-  //   subItems: [
-  //     { name: "Line Chart", path: "/line-chart", pro: false },
-  //     { name: "Bar Chart", path: "/bar-chart", pro: false },
-  //   ],
-  // },
-  // {
-  //   icon: <BoxCubeIcon />,
-  //   name: "UI Elements",
-  //   subItems: [
-  //     { name: "Alerts", path: "/alerts", pro: false },
-  //     { name: "Avatar", path: "/avatars", pro: false },
-  //     { name: "Badge", path: "/badge", pro: false },
-  //     { name: "Buttons", path: "/buttons", pro: false },
-  //     { name: "Images", path: "/images", pro: false },
-  //     { name: "Videos", path: "/videos", pro: false },
-  //   ],
-  // },
-  // {
-  //   icon: <PlugInIcon />,
-  //   name: "Authentication",
-  //   subItems: [
-  //     { name: "Sign In", path: "/signin", pro: false },
-  //     { name: "Sign Up", path: "/signup", pro: false },
-  //   ],
-  // },
+const managerNavItems: NavItem[] = [
+  {
+    name: "Disciplinas",
+    path: '/admin/disciplinas',
+    icon: <TableIcon />,
+  },
+  {
+    name: "Professores",
+    path: '/admin/professores',
+    icon: <FaGraduationCap />,
+  },
+  {
+    name: "Alunos",
+    path: '/admin/alunos',
+    icon: <FaUsers />,
+  },
+  {
+    name: "Avisos e Horários",
+    path: '/admin/horarios',
+    icon: <FaCalendarDays />,
+  },
+  {
+    name: "Denúncias e Feedback",
+    // path: '/admin/denuncias',
+    icon: <FaComment />,
+    subItems: [
+      { 
+        name: "Feedbacks", 
+        path: "/admin/feedbacks",
+      },
+      { 
+        name: "Denúncias", 
+        path: "/admin/denuncias",
+      },
+      { 
+        name: "Denúncias anônimas", 
+        path: "/admin/denuncias-anonimas",
+      },
+    ],
+  },
+  
 ];
+
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
+
+  const { role } = useContext(AuthContext);
+
+  const [ navItems, setNavItems ] = useState(role == 'manager' ? managerNavItems : teacherNavItems);
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -114,14 +132,14 @@ const AppSidebar: React.FC = () => {
 
   useEffect(() => {
     let submenuMatched = false;
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
+    ["main"].forEach((menuType) => {
+      const items = navItems;
       items.forEach((nav, index) => {
         if (nav.subItems) {
           nav.subItems.forEach((subItem) => {
             if (isActive(subItem.path)) {
               setOpenSubmenu({
-                type: menuType as "main" | "others",
+                type: menuType as "main",
                 index,
               });
               submenuMatched = true;
@@ -316,7 +334,7 @@ const AppSidebar: React.FC = () => {
             </>
           ) : (
             <img
-              src="/images/logo/logo-icon.svg"
+              src={Logo}
               alt="Logo"
               width={32}
               height={32}

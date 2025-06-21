@@ -20,9 +20,12 @@ import IntelectualRoutes from "./routes/IntelectualRoutes";
 import MotoraRoutes from "./routes/MotoraRoutes";
 import AppLayout from "./layout/AppLayout";
 import UserProfiles from "./pages/UserProfiles";
-import Disciplinas from "./pages/Admin/Disciplinas/Disciplinas";
-import DisciplinaDetails from "./pages/Admin/Disciplinas/DisciplinaDetails";
+import Disciplinas from "./pages/Admin/Teacher/Disciplinas/Disciplinas";
+import DisciplinaDetails from "./pages/Admin/Teacher/Disciplinas/DisciplinaDetails";
 import EditConteudo from "./pages/Admin/Conteudos/EditConteudo";
+import ResponsavelRoutes from "./routes/ResponsavelRoutes";
+import TeacherRoutes from "./routes/TeacherRoutes";
+import ManagerRoutes from "./routes/ManagerRoutes";
 
 export default function App() {
 
@@ -40,44 +43,21 @@ export default function App() {
             </Route>
             :
             <>
-            {role == 'student' && <>
-              {accessibilityType === "auditiva" && <Route index path="/*" element={<AuditivaRoutes />}/>}
-              {accessibilityType === "visual" && <Route index path="/*" element={<VisualRoutes />}/>}
-              {accessibilityType === "motora" && <Route index path="/*" element={<MotoraRoutes />}/>}
-              {accessibilityType === "intelectual" && <Route index path="/*" element={<IntelectualRoutes />}/>}
-            </>}
+              {role == 'student' && 
+              <>
+                {accessibilityType === "auditiva" && <Route index path="/*" element={<AuditivaRoutes />}/>}
+                {accessibilityType === "visual" && <Route index path="/*" element={<VisualRoutes />}/>}
+                {accessibilityType === "motora" && <Route index path="/*" element={<MotoraRoutes />}/>}
+                {accessibilityType === "intelectual" && <Route index path="/*" element={<IntelectualRoutes />}/>}
+              </>}
 
-              <Route path="admin" element={<AppLayout />}>
-                {/* <Route index path="" element={<Home />} /> */}
+              {role == 'parent' && <Route index path="/*" element={<ResponsavelRoutes />}/>}
 
-                <Route path="/admin/disciplinas" element={<Disciplinas />} />
-                <Route path="/admin/disciplinas/:disciplinaId" element={<DisciplinaDetails />} />
-                <Route path="/admin/disciplinas/:disciplinaId/conteudo/" element={<EditConteudo />} />
-                <Route path="/admin/disciplinas/:disciplinaId/conteudo/:id" element={<EditConteudo />} />
+              {role == 'teacher' && <Route index path="/*" element={<TeacherRoutes />}/>}
 
+              {role == 'manager' && <Route index path="/*" element={<ManagerRoutes />}/>}
 
-                {/* Others Page */}
-                <Route path="/admin/profile" element={<UserProfiles />} />
-                {/* <Route path="/admin//calendar" element={<Calendar />} />
-                <Route path="/admin//blank" element={<Blank />} /> */}
-
-                {/* Forms */}
-                {/* <Route path="/admin//form-elements" element={<FormElements />} />
-
-                {/* Tables */}
-
-                {/* Ui Elements */}
-                {/* <Route path="/admin//alerts" element={<Alerts />} />
-                <Route path="/admin//avatars" element={<Avatars />} />
-                <Route path="/admin//badge" element={<Badges />} />
-                <Route path="/admin//buttons" element={<Buttons />} />
-                <Route path="/admin//images" element={<Images />} />
-                <Route path="/admin//videos" element={<Videos />} /> */}
-
-                {/* Charts */}
-                {/* <Route path="/admin//line-chart" element={<LineChart />} />
-                <Route path="/admin//bar-chart" element={<BarChart />} /> */}
-              </Route>
+              
             </>
           }
           

@@ -34,8 +34,11 @@ export default function Home() {
   const { role, setRole, login, setAccessibilityType } = useContext(AuthContext);
 
   const handleLogin = () => {
-
-    setStep(STEPS.choice)
+    if(role == 'student'){
+      setStep(STEPS.choice)
+    }else{
+      login()
+    }
   }
 
   return (

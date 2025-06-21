@@ -26,11 +26,12 @@ import {
   FaFilePdf,
   FaPlay
 } from 'react-icons/fa6';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useOutletContext } from "react-router";
 import VerticalCarousel from "../../../components/experiences/visual/VerticalCarousel";
 import { speak } from "../../../services/utils";
 import useLongClick from "../../../hooks/useLongClick";
+import { AuthContext } from "../../../context/AuthProvider";
 
 const materias = [
   {
@@ -86,7 +87,7 @@ export default function Extras({ icone = <FaFolderOpen />, cor = '#21C87A'}) {
   }, { ms: 800 });
 
   return (
-    <div className="bg-[#F6F8FB] flex flex-col h-full w-full">
+    <div className="flex flex-col h-full w-full">
       <main className="flex-1 flex flex-col items-center px-3 pt-4 pb-3">
 
         <section className="w-full flex-1 flex flex-col">
@@ -102,8 +103,19 @@ export default function Extras({ icone = <FaFolderOpen />, cor = '#21C87A'}) {
 }
 
 function VideoCard({ title, description, url, ...rest }) {
+
+  const { themeOptions } = useContext(AuthContext);
+
+  const getTextClass = () => {
+    let classes = "";
+    if (themeOptions?.fontSize === 1.2) classes += " text-lg";
+    if (themeOptions?.fontSize === 1.4) classes += " text-xl";
+    if (themeOptions?.simpleMode) classes += " uppercase";
+    return classes;
+  };
+
   return (
-    <div {...rest} className="h-full w-full bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div {...rest} className="h-full w-full bg-white dark:bg-black rounded-2xl shadow-lg overflow-hidden">
       <div className="relative">
         <div className="h-40">
           <ReactPlayer width='100%'
@@ -111,10 +123,10 @@ function VideoCard({ title, description, url, ...rest }) {
         </div>
       </div>
       <div className="p-4 pointer-events-none">
-        <h3 className="text-sm font-bold text-[#233366] mb-1">
+        <h3 className={`text-sm font-bold text-[#233366] mb-1 dark:text-amber-300 ${getTextClass()}`}>
           {title}
         </h3>
-        <p className="text-xs text-[#6D7B97] mb-3">
+        <p className={`text-xs text-[#6D7B97] mb-3 dark:text-white ${getTextClass()}`}>
           {description}
         </p>
         {/* <div className="flex items-center justify-between">
@@ -127,23 +139,26 @@ function VideoCard({ title, description, url, ...rest }) {
   )
 }
 
-function MaterialCard({ icon, title, hasLibras, description, time, actionLabel, onLibrasClick, ...rest }) {
+function MaterialCard({ icon, title, description, time, actionLabel, onLibrasClick, ...rest }) {
+  const { themeOptions } = useContext(AuthContext);
+
+  const getTextClass = () => {
+    let classes = "";
+    if (themeOptions?.fontSize === 1.2) classes += " text-lg";
+    if (themeOptions?.fontSize === 1.4) classes += " text-xl";
+    if (themeOptions?.simpleMode) classes += " uppercase";
+    return classes;
+  };
   return (
-    <div {...rest} className="h-full w-full bg-white rounded-2xl shadow-lg p-4">
+    <div {...rest} className="h-full w-full bg-white dark:bg-black rounded-2xl shadow-lg p-4">
       <div className="flex items-center gap-3 mb-3 pointer-events-none">
         <div className="w-12 h-12 bg-[#E6F9F1] rounded-xl flex items-center justify-center">
           {icon}
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-bold text-[#233366]">{title}</h3>
-          <p className="text-xs text-[#6D7B97]">{description}</p>
+          <h3 className={`text-sm font-bold text-[#233366] dark:text-amber-300 ${getTextClass()}`}>{title}</h3>
+          <p className={`text-xs text-[#6D7B97] dark:text-white ${getTextClass()}`}>{description}</p>
         </div>
-        {hasLibras && <button
-          className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-2xl font-semibold active:bg-[#21C87A]/20"
-          onClick={() => onLibrasClick()}
-        >
-          <FaHandSparkles />
-        </button>}
       </div>
       <div className="flex items-center justify-between pointer-events-none">
         <span className="text-xs text-[#A4B1C8]">{time}</span>
@@ -155,29 +170,3 @@ function MaterialCard({ icon, title, hasLibras, description, time, actionLabel, 
   );
 }
 
-
-function SubjectButton({ icon, bgColor, title, subtitle, chevronColor }: any) {
-  return (
-    <button
-      className={`flex items-center gap-3 ${bgColor} rounded-xl py-3 px-4 focus:ring-2 transition cursor-pointer w-full`}
-    >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white">{icon}</div>
-      <div className="flex flex-col flex-1 items-start">
-        <span className="text-base font-semibold text-[#233366]">{title}</span>
-        <span className="text-xs text-[#6D7B97]">{subtitle}</span>
-      </div>
-      <FaChevronRight className={`text-[${chevronColor}]`} />
-    </button>
-  );
-}
-
-function LoginOption({ icon, label, bg }: any) {
-  return (
-    <button
-      className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 ${bg} rounded-xl focus:ring-2 transition cursor-pointer`}
-    >
-      <div className="text-lg">{icon}</div>
-      <span className="text-xs font-medium text-[#233366]">{label}</span>
-    </button>
-  );
-}

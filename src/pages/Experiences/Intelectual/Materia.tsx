@@ -1,154 +1,102 @@
-// src/pages/auditiva/HomePage.tsx
-import Header from "../../../components/common/Header";
-import Footer from "../../../components/common/Footer";
-
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router";
 import {
-  FaGraduationCap,
-  FaUniversalAccess,
-  FaUserGraduate,
-  FaPenToSquare,
-  FaBookOpen,
-  FaSquareRootVariable,
-  FaFlaskVial,
-  FaLandmark,
-  FaEarthAmericas,
   FaHandSparkles,
   FaChevronRight,
   FaXmark,
-  FaRegCopyright,
-  FaEyeSlash,
-  FaFile
-} from 'react-icons/fa6';
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+  FaFile,
+  FaFaceSmile,
+} from "react-icons/fa6";
+import Footer from "../../../components/common/Footer";
+import { AuthContext } from "../../../context/AuthProvider";
+import { useTheme } from "../../../context/ThemeContext";
 
 const materias = [
   {
-    id: 'portugues',
-    nome: 'Ortografia e acentuação',
-    descricao: 'Aprenda as regras de ortografia e o uso correto dos acentos gráficos.',
+    id: "portugues",
+    nome: "Ortografia e acentuação",
+    descricao: "Aprenda as regras de ortografia e o uso correto dos acentos gráficos.",
   },
   {
-    id: 'matematica',
-    nome: 'Interpretação de texto',
-    descricao: 'Dicas para compreender e analisar textos de diferentes gêneros.',
+    id: "matematica",
+    nome: "Interpretação de texto",
+    descricao: "Dicas para compreender e analisar textos de diferentes gêneros.",
   },
 ];
 
 export default function Materia() {
-
-  const [materiaLibras, setMateriaLibras] = useState(null);
-
-  const abrirLibras = (nome) => setMateriaLibras(nome);
+  const [materiaLibras, setMateriaLibras] = useState<string | null>(null);
+  const abrirLibras = (nome: string) => setMateriaLibras(nome);
   const fecharLibras = () => setMateriaLibras(null);
 
   const navigate = useNavigate();
-
   const { setHeaderOptions } = useOutletContext();
+
+  const { themeOptions } = useContext(AuthContext);
+  const { theme } = useTheme();
 
   useEffect(() => {
     setHeaderOptions({
       custom: true,
-      icon: <FaFile/>,
-      color: '#465fff',
-      title: 'Conteúdos',
-      desc: 'Português'
+      icon: <FaFile />,
+      color: "#465fff",
+      title: "Conteúdos",
+      desc: "Português",
     });
-  }, [])
+  }, []);
+
+  const getTextClass = () => {
+    let classes = "";
+    if (themeOptions?.fontSize === 1.2) classes += " text-lg";
+    if (themeOptions?.fontSize === 1.4) classes += " text-xl";
+    if (themeOptions?.simpleMode) classes += " uppercase";
+    return classes;
+  };
+
+  const bgClass =
+    theme === "dark" ? "bg-black text-white" : "bg-[#F6F8FB] text-[#222]";
+
+  const cardBgClass = theme === "dark" ? "bg-gray-900 border-2" : "bg-white";
+
+  const descriptionColor = theme === "dark" ? "text-gray-400" : "text-[#7B8794]";
 
   return (
-    <div className="bg-[#F6F8FB] min-h-screen flex flex-col justify-between">
-
-      <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
-
+    <div className={`${bgClass} flex flex-col justify-between transition`}>
+      <main className={`flex-1 flex flex-col items-center px-5 pt-4 pb-2 ${getTextClass()}`}>
         <section className="w-full max-w-xs flex flex-col">
           <div className="flex flex-row items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-[#233366]">Conteúdos</h3>
+            <h3 className={`text-base font-bold ${theme === "dark" ? "text-white" : "text-[#233366]"}`}>
+              Conteúdos
+            </h3>
           </div>
           <div className="flex flex-col gap-3">
-          {materias.map(({ id, nome, descricao }) => (
-              <div onClick={() => navigate('/materias/portugues/conteudos/ortografia')} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
-                <div className="flex flex-col flex-1">
-                  <span className="font-semibold text-[#253858] text-base">{nome}</span>
-                  <span className="text-xs text-[#7B8794]">{descricao}</span>
+            {materias.map(({ id, nome, descricao }) => (
+              <div
+                key={id}
+                onClick={() => navigate(`/materias/${id}/conteudos/ortografia`)}
+                className={`${cardBgClass} rounded-2xl p-4 shadow-sm flex items-center gap-3 cursor-pointer`}
+              >
+                <div className="flex flex-col text-center flex-1">
+                  <FaFaceSmile className="self-center text-blue-300 text-2xl mb-3" />
+                  <span className={`font-semibold text-base ${theme === "dark" ? "text-white" : "text-[#253858]"} ${getTextClass()}`}>
+                    {nome}
+                  </span>
+                  <span className={`text-xs ${descriptionColor}`}>
+                    {descricao}
+                  </span>
                 </div>
-                <button
-                  className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-xs font-semibold active:bg-[#21C87A]/20"
-                  onClick={() => abrirLibras(nome)}
-                >
-                  <FaHandSparkles /> Libras
-                </button>
-                <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
-                  <FaChevronRight />
-                </button>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="flex flex-col items-center mt-4">
-          <span className="text-xs text-[#4F5B69] mb-1 text-center">
-            Toque no botão
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#21C87A]/10 rounded-md text-[#21C87A] font-bold ml-1">
-              <FaHandSparkles /> Libras
-            </span>
-            para assistir à explicação em Língua Brasileira de Sinais.
-          </span>
-        </section>
+        <div className={`mt-6 text-sm text-[#4F5B69] dark:text-white text-center ${getTextClass()}`}>
+          ✨ <strong>Você consegue!</strong> Estamos aqui para te ajudar. 💙
+        </div>
       </main>
 
       <Footer />
 
-      {materiaLibras && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={fecharLibras}>
-          <div className="bg-white rounded-2xl p-6 w-[90vw] max-w-xs flex flex-col items-center shadow-lg relative" onClick={(e) => e.stopPropagation()}>
-            <button className="absolute top-3 right-3 text-[#A0AEC0] text-xl hover:text-[#ED5555] transition" onClick={fecharLibras}>
-              <FaXmark />
-            </button>
-            <div className="flex flex-col items-center mb-3">
-              <FaHandSparkles className="text-3xl text-[#21C87A] mb-2" />
-              <span className="font-semibold text-[#253858] text-lg mb-1">Explicação em Libras</span>
-              <span className="text-xs text-[#7B8794] mb-2">{materiaLibras}</span>
-            </div>
-            <div className="w-full h-44 rounded-xl bg-[#EAF1FB] flex items-center justify-center overflow-hidden mb-2">
-              <img
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/31a4c7ee91-deb763179a2770866fa5.png"
-                alt="pessoa gesticulando em libras"
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <span className="text-xs text-[#4F5B69] text-center">
-              Assista à explicação desse conteúdo em Libras para melhor compreensão.
-            </span>
-          </div>
-        </div>
-      )}
     </div>
-  );
-}
-
-function SubjectButton({ icon, bgColor, title, subtitle, chevronColor }: any) {
-  return (
-    <button
-      className={`flex items-center gap-3 ${bgColor} rounded-xl py-3 px-4 focus:ring-2 transition cursor-pointer w-full`}
-    >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white">{icon}</div>
-      <div className="flex flex-col flex-1 items-start">
-        <span className="text-base font-semibold text-[#233366]">{title}</span>
-        <span className="text-xs text-[#6D7B97]">{subtitle}</span>
-      </div>
-      <FaChevronRight className={`text-[${chevronColor}]`} />
-    </button>
-  );
-}
-
-function LoginOption({ icon, label, bg }: any) {
-  return (
-    <button
-      className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 ${bg} rounded-xl focus:ring-2 transition cursor-pointer`}
-    >
-      <div className="text-lg">{icon}</div>
-      <span className="text-xs font-medium text-[#233366]">{label}</span>
-    </button>
   );
 }

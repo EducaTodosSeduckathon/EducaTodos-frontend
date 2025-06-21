@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { AuthContext } from '../../../context/AuthProvider';
 
 const questions = [
   {
@@ -66,12 +67,14 @@ export default function QuestionCard() {
     }
   }
 
+  const { themeOptions } = useContext(AuthContext);
+
   return (
-    <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-5 py-6 flex flex-col gap-4 mb-4">
+    <section className="w-full max-w-xs bg-white dark:bg-black dark:border-2 rounded-2xl shadow-lg px-5 py-6 flex flex-col gap-4 mb-4">
 
       {/* Progress */}
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-xs text-[#3653B4] font-semibold">
+        <span className="text-xs text-[#3653B4] dark:text-amber-300 font-semibold">
           Questão <span className="font-bold">{current + 1}</span>/{questions.length}
         </span>
         <div className="flex-1 h-2 ml-3 rounded-full bg-[#E4EDFB]">
@@ -84,7 +87,7 @@ export default function QuestionCard() {
 
       {/* Pergunta e opções */}
       <div className="flex flex-col gap-3">
-        <h2 className="text-base font-bold text-[#233366] mb-1">{question.question}</h2>
+        <h2 className="text-base font-bold text-[#233366] dark:text-amber-300 mb-1">{question.question}</h2>
         <ul className="flex flex-col gap-3">
           {question.options.map((option, i) => {
             const isSelected = selected === i;
@@ -101,7 +104,8 @@ export default function QuestionCard() {
                     w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold
                     border border-[#E4EDFB] bg-[#F6F8FB] text-[#233366]
                     hover:bg-[#E4EDFB] transition focus:ring-2 focus:ring-[#3653B4]
-                    ${isSelected ? 'ring-2 ring-offset-2 bg-[#E4EDFB] border-[#F6B800]' : ''}
+                    dark:bg-black dark:border-2 
+                    ${isSelected ? 'ring-2 ring-offset-2 bg-[#E4EDFB] dark:bg-white dark:text-black border-[#F6B800]' : 'dark:text-white'}
                   `}
                 >
                   <span className={`w-7 h-7 rounded-full border-2 ${borderColor} flex items-center justify-center font-bold`}>
@@ -115,33 +119,17 @@ export default function QuestionCard() {
         </ul>
       </div>
 
-      {/* Feedback */}
-      {showFeedback && (
-        <div className="mt-3 flex items-center justify-center gap-2">
-          {selected === question.answer ? (
-            <>
-              <i className="fa-solid fa-circle-check text-[#30C185] text-xl"></i>
-              <span className="text-sm font-semibold text-[#30C185]">Resposta correta!</span>
-            </>
-          ) : (
-            <>
-              <i className="fa-solid fa-circle-xmark text-[#F87171] text-xl"></i>
-              <span className="text-sm font-semibold text-[#F87171]">Resposta incorreta.</span>
-            </>
-          )}
-        </div>
-      )}
 
       {/* Controles */}
       <div className="w-full flex items-center justify-between gap-2 mt-4">
         <button
           onClick={handleBack}
           disabled={current === 0}
-          className={`flex items-center gap-2 bg-transparent px-4 py-2 rounded-lg text-[#3653B4] font-semibold text-sm hover:underline
+          className={`flex dark:text-white items-center gap-2 bg-transparent px-4 py-2 rounded-lg text-[#3653B4] font-semibold text-sm hover:underline
             ${current === 0 ? 'opacity-50 cursor-not-allowed' : ''}
           `}
         >
-          <i className="fa-solid fa-arrow-left text-base"></i>
+          <i className="fa-solid fa-arrow-left text-base "></i>
           Anterior
         </button>
 

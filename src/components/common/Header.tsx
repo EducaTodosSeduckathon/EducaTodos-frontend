@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthProvider';
 import { FaEarDeaf } from 'react-icons/fa6';
 
-function Header({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityIcon = <FaEarDeaf/>, accessibilityDescription = 'Leitura e Libras'}) {
+function Header({ custom = false, hide, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityIcon = <FaEarDeaf/>, accessibilityDescription = 'Leitura e Libras'}) {
 
   const navigate = useNavigate()
 
@@ -14,7 +14,7 @@ function Header({ custom = false, back = true, icon, color, title, desc, accessi
 
   return (
     <>
-      <header className="sticky top-0 w-full px-5 py-2 bg-white shadow-sm flex justify-between">
+      <header className="sticky top-0 w-full px-5 py-2 bg-white dark:bg-[#000] shadow-sm flex justify-between">
         {back ? <button 
           type="button"
           onClick={() => navigate(-1)}
@@ -25,7 +25,7 @@ function Header({ custom = false, back = true, icon, color, title, desc, accessi
         <button type="button" onClick={() => logout()} className="w-10 h-10 bg-red-100 text-red-500 rounded-2xl grid place-content-center text-sm font-medium">Sair</button>
 
       </header>
-      <div className="flex justify-center mt-3">
+      {!hide && <div className="flex justify-center mt-3">
         {!custom ?
           <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-7 flex flex-col items-center mb-3">
             <div className="flex flex-col items-center mb-3">
@@ -57,7 +57,7 @@ function Header({ custom = false, back = true, icon, color, title, desc, accessi
           </section>
 
         }
-      </div>
+      </div>}
     </>
   );
 }

@@ -1,13 +1,13 @@
-import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
+import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
 import {
   Table,
   TableBody,
   TableCell,
   TableHeader,
   TableRow,
-} from "../../../components/ui/table";
+} from "../../../../components/ui/table";
 
-import Badge from "../../../components/ui/badge/Badge";
+import Badge from "../../../../components/ui/badge/Badge";
 import { FaCog, FaEdit, FaUsers } from "react-icons/fa";
 import { Link } from "react-router";
 
@@ -62,11 +62,11 @@ export default function Disciplinas() {
                 <TableCell isHeader className="px-5 py-3 font-medium text-start">
                   Disciplina
                 </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-start">
+                {/* <TableCell isHeader className="px-5 py-3 font-medium text-start">
                   Período
-                </TableCell>
+                </TableCell> */}
                 <TableCell isHeader className="px-5 py-3 font-medium text-start">
-                  Alunos
+                  Conteúdos
                 </TableCell>
                 <TableCell isHeader className="px-5 py-3 font-medium text-start">
                   Status
@@ -85,9 +85,9 @@ export default function Disciplinas() {
                       {disciplina.nome}
                     </Link>
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
+                  {/* <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
                     {disciplina.periodo}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
                     {disciplina.alunos}
                   </TableCell>
@@ -107,24 +107,13 @@ export default function Disciplinas() {
                   </TableCell>
                   <TableCell className="px-5 py-4 text-start">
                     <div className="flex gap-3">
-                      <button
+                      <Link
+                        to={`/admin/disciplinas/${disciplina.id}`}
                         className="text-blue-600 hover:text-blue-800"
                         title="Editar"
                       >
                         <FaEdit />
-                      </button>
-                      <button
-                        className="text-green-600 hover:text-green-800"
-                        title="Alunos"
-                      >
-                        <FaUsers />
-                      </button>
-                      <button
-                        className="text-gray-600 hover:text-gray-800"
-                        title="Configurações"
-                      >
-                        <FaCog />
-                      </button>
+                      </Link>
                     </div>
                   </TableCell>
                 </TableRow>

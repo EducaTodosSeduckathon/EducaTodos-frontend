@@ -1,10 +1,11 @@
 import { useState } from "react";
-import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
+import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
 import Resumo from "./tabs/Resumo";
 import Extras from "./tabs/Extras";
 import Questoes from "./tabs/Questoes";
+import Respostas from "./tabs/Respostas";
 
-const tabs = ["Resumo", "Materiais Complementares", "Questões"] as const;
+const tabs = ["Resumo", "Materiais Complementares", "Questões", "Respostas"] as const;
 
 export default function EditConteudo() {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("Resumo");
@@ -34,6 +35,7 @@ export default function EditConteudo() {
         {activeTab === "Resumo" && <Resumo />}
         {activeTab === "Materiais Complementares" && <Extras />}
         {activeTab === "Questões" && <Questoes />}
+        {activeTab === "Respostas" && <Respostas />}
       </div>
     </>
   );

@@ -1,180 +1,147 @@
-// src/pages/auditiva/HomePage.tsx
-import Header from "../../../components/common/Header";
-import Footer from "../../../components/common/Footer";
-
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router";
 import {
-  FaGraduationCap,
-  FaUniversalAccess,
-  FaUserGraduate,
-  FaPenToSquare,
   FaBookOpen,
   FaSquareRootVariable,
   FaFlaskVial,
   FaLandmark,
   FaEarthAmericas,
-  FaHandSparkles,
-  FaChevronRight,
-  FaXmark,
-  FaRegCopyright,
+  FaBrain,
+  FaTextHeight,
   FaEyeSlash,
-  FaBrain
-} from 'react-icons/fa6';
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+  FaHeading,
+} from "react-icons/fa6";
+import Footer from "../../../components/common/Footer";
+import { FaAdjust, FaUndo } from "react-icons/fa";
+import { useTheme } from "../../../context/ThemeContext";
+import { AuthContext } from "../../../context/AuthProvider";
 
 const materias = [
-  {
-    id: 'portugues',
-    nome: 'Português',
-    descricao: 'Leitura, gramática e redação',
-    cor: '#2F80ED',
-    icone: <FaBookOpen />,
-  },
-  {
-    id: 'matematica',
-    nome: 'Matemática',
-    descricao: 'Números, operações e lógica',
-    cor: '#FFB946',
-    icone: <FaSquareRootVariable />,
-  },
-  {
-    id: 'ciencias',
-    nome: 'Ciências',
-    descricao: 'Natureza, experiências e descobertas',
-    cor: '#21C87A',
-    icone: <FaFlaskVial />,
-  },
-  {
-    id: 'historia',
-    nome: 'História',
-    descricao: 'Fatos, civilizações e culturas',
-    cor: '#ED5555',
-    icone: <FaLandmark />,
-  },
-  {
-    id: 'geografia',
-    nome: 'Geografia',
-    descricao: 'Territórios, clima e mapas',
-    cor: '#8B5CF6',
-    icone: <FaEarthAmericas />,
-  },
+  { id: "portugues", nome: "Português", cor: "#2F80ED", icone: <FaBookOpen /> },
+  { id: "matematica", nome: "Matemática", cor: "#FFB946", icone: <FaSquareRootVariable /> },
+  { id: "ciencias", nome: "Ciências", cor: "#21C87A", icone: <FaFlaskVial /> },
+  { id: "historia", nome: "História", cor: "#ED5555", icone: <FaLandmark /> },
+  { id: "geografia", nome: "Geografia", cor: "#8B5CF6", icone: <FaEarthAmericas /> },
 ];
 
 export default function Home() {
-
-  const [materiaLibras, setMateriaLibras] = useState(null);
-
-  const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
-
   const { setHeaderOptions } = useOutletContext();
+  const navigate = useNavigate();
 
+  const { theme, setTheme, toggleTheme } = useTheme();
+
+  const { themeOptions, setThemeOptions } = useContext(AuthContext);
+
+  const reset = () => {
+    setThemeOptions({
+      fontSize: 1,
+      simpleMode: false
+    });
+    setTheme('light');
+  };
+  
   useEffect(() => {
     setHeaderOptions({
       custom: false,
       back: false,
-      accessibility: 'Intelectual',
+      accessibility: "Intelectual",
       accessibilityIcon: <FaBrain />,
-      accessibilityDescription: 'Apoio'
+      accessibilityDescription: "Apoio Cognitivo",
     });
   }, []);
 
-  const navigate = useNavigate();
+  const getTextClass = () => {
+    let classes = "";
+    if (themeOptions?.fontSize === 1.2) classes += " text-lg";
+    if (themeOptions?.fontSize === 1.4) classes += " text-xl";
+    if (themeOptions?.simpleMode) classes += " uppercase";
+    return classes;
+  };
+
   return (
-    <div className="bg-[#F6F8FB] flex flex-col justify-between">
-      <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
+    <div className={`flex flex-col justify-between min-h-screen transition`}>
+      <main className={`flex-1 flex flex-col items-center px-4 pt-5 ${getTextClass()}`}>
+        {/* 🔧 Ajustes Visuais */}
+        <div className="w-full max-w-md bg-white shadow-md rounded-2xl dark:bg-black dark:border-2 p-4 mb-5 flex flex-col gap-2">
+          <h3 className="text-base font-bold text-[#233366] dark:text-white mb-2">
+            🎛️ Ajustes Visuais
+          </h3>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              onClick={() =>
+                setThemeOptions((prev) => ({...prev, fontSize: prev.fontSize < 1.4 ? prev.fontSize + 0.2 : 1.4}))
+              }
+              className="bg-blue-100 rounded-xl p-3 flex flex-col items-center hover:bg-blue-200"
+            >
+              <FaTextHeight />
+              <span className="text-xs text-center">Aumentar Texto</span>
+            </button>
 
-        <section className="w-full max-w-xs flex flex-col">
-          <div className="flex flex-row items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-[#233366]">Matérias</h3>
+            <button
+              onClick={() => setThemeOptions((prev) => ({...prev, simpleMode: !prev.simpleMode}))}
+              className="bg-yellow-100 rounded-xl p-3 flex flex-col items-center hover:bg-yellow-200"
+            >
+              <FaHeading />
+              <span className="text-xs text-center">
+                {!themeOptions?.simpleMode ? "Maiúsculas" : "Texto Normal"}
+              </span>
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              className="bg-[#000] text-white rounded-xl p-3 flex flex-col items-center hover:bg-gray-800"
+            >
+              <FaAdjust />
+              <span className="text-xs text-center">Contraste</span>
+            </button>
+
+            <button
+              onClick={reset}
+              className="bg-red-100 rounded-xl p-3 flex flex-col items-center hover:bg-red-200 col-span-3"
+            >
+              <FaUndo />
+              <span className="text-xs text-center">Resetar Ajustes</span>
+            </button>
           </div>
-          <div className="flex flex-col gap-3">
-          {materias.map(({ id, nome, descricao, cor, icone }) => (
-              <div onClick={() => navigate('/materias/portugues/conteudos')} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full text-xl shrink-0" style={{ backgroundColor: `${cor}1A`, color: cor }}>
-                  {icone}
-                </div>
-                <div className="flex flex-col flex-1">
-                  <span className="font-semibold text-[#253858] text-base">{nome}</span>
-                  <span className="text-xs text-[#7B8794]">{descricao}</span>
-                </div>
-                <button
-                  className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-xs font-semibold active:bg-[#21C87A]/20"
-                  onClick={() => abrirLibras(nome)}
-                >
-                  <FaHandSparkles /> Libras
-                </button>
-                <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
-                  <FaChevronRight />
-                </button>
+        </div>
+
+        {/* 🎯 Matérias */}
+        <h2 className={`dark:text-white text-2xl font-bold mb-2 text-[#233366] ${getTextClass()}`}>
+          Qual matéria você quer estudar?
+        </h2>
+        <p className={`dark:text-white text-sm text-[#4F5B69] mb-5 text-center ${getTextClass()}`}>
+          Toque no botão da matéria para começar! 💡
+        </p>
+
+        <div className="grid grid-cols-2 gap-4 w-full max-w-md">
+          {materias.map(({ id, nome, cor, icone }) => (
+            <button
+              key={id}
+              onClick={() => navigate(`/materias/${id}/conteudos`)}
+              className={`bg-white dark:bg-black border-2 rounded-2xl p-4 shadow-md flex flex-col items-center justify-center gap-2 hover:bg-[#f2f4f7] transition active:scale-95`}
+            >
+              <div
+                className="flex items-center justify-center w-16 h-16 rounded-xl text-3xl"
+                style={{
+                  backgroundColor: `${cor}1A`,
+                  color: cor,
+                }}
+              >
+                {icone}
               </div>
-            ))}
-          </div>
-        </section>
+              <span className={`font-bold text-base text-[#253858] dark:text-white text-center ${getTextClass()}`}>
+                {nome}
+              </span>
+            </button>
+          ))}
+        </div>
 
-        <section className="flex flex-col items-center mt-4">
-          <span className="text-xs text-[#4F5B69] mb-1 text-center">
-            Toque no botão
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#21C87A]/10 rounded-md text-[#21C87A] font-bold ml-1">
-              <FaHandSparkles /> Libras
-            </span>
-            para assistir à explicação em Língua Brasileira de Sinais.
-          </span>
-        </section>
+        <div className={`mt-6 text-sm text-[#4F5B69] dark:text-white text-center ${getTextClass()}`}>
+          ✨ <strong>Você consegue!</strong> Estamos aqui para te ajudar. 💙
+        </div>
       </main>
 
       <Footer />
-
-      {materiaLibras && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={fecharLibras}>
-          <div className="bg-white rounded-2xl p-6 w-[90vw] max-w-xs flex flex-col items-center shadow-lg relative" onClick={(e) => e.stopPropagation()}>
-            <button className="absolute top-3 right-3 text-[#A0AEC0] text-xl hover:text-[#ED5555] transition" onClick={fecharLibras}>
-              <FaXmark />
-            </button>
-            <div className="flex flex-col items-center mb-3">
-              <FaHandSparkles className="text-3xl text-[#21C87A] mb-2" />
-              <span className="font-semibold text-[#253858] text-lg mb-1">Explicação em Libras</span>
-              <span className="text-xs text-[#7B8794] mb-2">{materiaLibras}</span>
-            </div>
-            <div className="w-full h-44 rounded-xl bg-[#EAF1FB] flex items-center justify-center overflow-hidden mb-2">
-              <img
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/31a4c7ee91-deb763179a2770866fa5.png"
-                alt="pessoa gesticulando em libras"
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <span className="text-xs text-[#4F5B69] text-center">
-              Assista à explicação desse conteúdo em Libras para melhor compreensão.
-            </span>
-          </div>
-        </div>
-      )}
     </div>
-  );
-}
-
-function SubjectButton({ icon, bgColor, title, subtitle, chevronColor }: any) {
-  return (
-    <button
-      className={`flex items-center gap-3 ${bgColor} rounded-xl py-3 px-4 focus:ring-2 transition cursor-pointer w-full`}
-    >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white">{icon}</div>
-      <div className="flex flex-col flex-1 items-start">
-        <span className="text-base font-semibold text-[#233366]">{title}</span>
-        <span className="text-xs text-[#6D7B97]">{subtitle}</span>
-      </div>
-      <FaChevronRight className={`text-[${chevronColor}]`} />
-    </button>
-  );
-}
-
-function LoginOption({ icon, label, bg }: any) {
-  return (
-    <button
-      className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 ${bg} rounded-xl focus:ring-2 transition cursor-pointer`}
-    >
-      <div className="text-lg">{icon}</div>
-      <span className="text-xs font-medium text-[#233366]">{label}</span>
-    </button>
   );
 }

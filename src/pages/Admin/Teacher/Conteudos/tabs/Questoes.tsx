@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaTrash, FaPlus, FaCheckCircle } from "react-icons/fa";
-import DropzoneComponent from "../../../../components/form/form-elements/DropZone";
+import DropzoneComponent from "../../../../../components/form/form-elements/DropZone";
 
 interface Questao {
   id: number;

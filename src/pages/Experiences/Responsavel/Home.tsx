@@ -1,11 +1,23 @@
+import { useEffect } from "react";
 import { 
   FaCalculator, FaBook, FaFlask, 
   FaCheck, FaClock, 
   FaCalendarDays, FaComments, 
   FaChartLine, FaUserCheck 
 } from "react-icons/fa6";
+import { useOutletContext } from "react-router";
 
-export default function Content() {
+export default function Home() {
+
+  const { setHeaderOptions } = useOutletContext();
+
+  useEffect(() => {
+    setHeaderOptions({
+      hide: true,
+      back: false
+    })
+  }, [])
+
   return (
     <main className="flex-1 px-5 py-4 overflow-y-auto">
       {/* Informações do Aluno */}
@@ -20,11 +32,7 @@ export default function Content() {
             <h3 className="text-base font-semibold text-[#233366]">
               Maria Silva Santos
             </h3>
-            <span className="text-xs text-[#6D7B97]">7º Ano - Turma A</span>
-          </div>
-          <div className="text-right">
-            <div className="text-lg font-bold text-[#30C185]">8.5</div>
-            <span className="text-xs text-[#6D7B97]">Média Geral</span>
+            <span className="text-xs text-[#6D7B97]">7º Ano</span>
           </div>
         </div>
         <div className="flex gap-2">
@@ -34,124 +42,61 @@ export default function Content() {
         </div>
       </section>
 
-      {/* Gráfico Simples */}
-      <section className="bg-white rounded-2xl shadow-sm p-4 mb-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-base font-semibold text-[#233366]">
-            Evolução das Notas
-          </h3>
-          <select className="text-xs bg-[#F6F8FB] border border-[#E8EBF0] rounded-lg px-2 py-1">
-            <option>Último Bimestre</option>
-            <option>Último Trimestre</option>
-            <option>Ano Letivo</option>
-          </select>
-        </div>
-        <div className="h-32 bg-[#F6F8FB] rounded-lg flex items-end justify-between px-4 py-2 gap-2">
-          {["Mar", "Abr", "Mai", "Jun"].map((month, i) => (
-            <div key={month} className="flex flex-col items-center gap-1">
-              <div
-                className={`w-6 rounded-t ${
-                  ["bg-[#30C185]", "bg-[#3653B4]", "bg-[#F6B800]", "bg-[#30C185]"][i]
-                }`}
-                style={{ height: ["60%", "75%", "50%", "85%"][i] }}
-              ></div>
-              <span className="text-xs text-[#6D7B97]">{month}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Notas por disciplina */}
       <section className="bg-white rounded-2xl shadow-sm p-4 mb-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-base font-semibold text-[#233366]">
-            Notas por Disciplina
+            Atividades por Disciplina
           </h3>
-          <button className="text-xs text-[#3653B4] underline">Ver todas</button>
         </div>
         <div className="space-y-3">
           <SubjectCard
             title="Matemática"
             icon={<FaCalculator className="text-[#30C185]" />}
             color="green"
-            grade="9.2"
+            grade="5/5"
             date="15/06"
           />
           <SubjectCard
             title="Português"
             icon={<FaBook className="text-[#3653B4]" />}
             color="blue"
-            grade="8.7"
+            grade="4/5"
             date="12/06"
           />
           <SubjectCard
             title="Ciências"
             icon={<FaFlask className="text-[#F6B800]" />}
             color="yellow"
-            grade="7.5"
+            grade="3/5"
             date="10/06"
           />
         </div>
       </section>
 
-      {/* Atividades recentes */}
+      {/* Pendências por disciplina */}
       <section className="bg-white rounded-2xl shadow-sm p-4 mb-4">
-        <h3 className="text-base font-semibold text-[#233366] mb-3">
-          Atividades Recentes
-        </h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-base font-semibold text-[#233366]">
+            Pendências por Disciplina
+          </h3>
+        </div>
         <div className="space-y-3">
-          <ActivityCard
-            title="Prova de Matemática"
-            status="Nota: 9.2 • 15 de junho"
-            icon={<FaCheck className="text-[#30C185]" />}
+          <SubjectCard
+            title="Matemática"
+            icon={<FaCalculator className="text-[#30C185]" />}
             color="green"
+            grade="3 questões"
           />
-          <ActivityCard
-            title="Trabalho de História"
-            status="Pendente • Entrega: 20 de junho"
-            icon={<FaClock className="text-[#F6B800]" />}
-            color="yellow"
-          />
-          <ActivityCard
-            title="Redação Português"
-            status="Nota: 8.7 • 12 de junho"
-            icon={<FaCheckCircle className="text-[#3653B4]" />}
+          <SubjectCard
+            title="Português"
+            icon={<FaBook className="text-[#3653B4]" />}
             color="blue"
+            grade="2 questões"
           />
         </div>
       </section>
 
-      {/* Ações */}
-      <section className="grid grid-cols-2 gap-3 mb-6">
-        <ActionButton
-          title="Calendário"
-          icon={<FaCalendarDays />}
-          bg="bg-[#E4EDFB]"
-          hover="hover:bg-[#d9e6fb]"
-          color="text-[#3653B4]"
-        />
-        <ActionButton
-          title="Relatórios"
-          icon={<FaChartLine />}
-          bg="bg-[#E6F9F1]"
-          hover="hover:bg-[#d2f6e7]"
-          color="text-[#1D6150]"
-        />
-        <ActionButton
-          title="Mensagens"
-          icon={<FaComments />}
-          bg="bg-[#FFF2CC]"
-          hover="hover:bg-[#ffe5a4]"
-          color="text-[#987200]"
-        />
-        <ActionButton
-          title="Frequência"
-          icon={<FaUserCheck />}
-          bg="bg-[#FFE6ED]"
-          hover="hover:bg-[#ffd0de]"
-          color="text-[#8F2A47]"
-        />
-      </section>
     </main>
   );
 }
@@ -197,7 +142,7 @@ const SubjectCard = ({ title, icon, color, grade, date }) => {
         </div>
         <div>
           <div className="text-sm font-medium text-[#233366]">{title}</div>
-          <span className="text-xs text-[#6D7B97]">Última avaliação: {date}</span>
+          {date && <span className="text-xs text-[#6D7B97]">Último questionário: {date}</span>}
         </div>
       </div>
       <div className="text-right">
