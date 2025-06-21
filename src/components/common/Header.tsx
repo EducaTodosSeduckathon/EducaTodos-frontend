@@ -4,7 +4,7 @@ import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthProvider';
-import { FaCommentDots, FaEarDeaf } from 'react-icons/fa6';
+import { FaBars, FaCommentDots, FaEarDeaf } from 'react-icons/fa6';
 import Button from '../ui/button/Button';
 import ModalSugestoes from './ModalSugestoes';
 
@@ -32,10 +32,10 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
       {!hide && <div className="flex justify-center mt-3">
         {!custom ?
           <section className="relative w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-7 flex flex-col items-center mb-3">
-            <Button onClick={() => setModalSugestoes(true)} className="absolute left-2 top-2 text-sm p-1 " variant='outline' size='xs'>
-              <FaCommentDots className='text-blue-400' />
-              Sugestões<br/>e Denúncias
-            </Button>
+            <button onClick={() => setModalSugestoes(true)} className="w-20 h-20 absolute right-[-10px] top-[-10px] text-xs p-1 flex flex-col justify-center items-center rounded-full bg-amber-100 border border-amber-400">
+              <FaBars className='text-xl text-amber-500' />
+              {/* Sugestões e Denúncias */}
+            </button>
             <div className="flex flex-col items-center mb-3">
               <img
                 src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg"
@@ -53,12 +53,6 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
               <span className="text-xs text-[#A4B1C8] ml-1">({accessibilityDescription})</span>
             </div>
 
-            <div className="py-1 px-2 bg-amber-200 mt-3 rounded-xl w-full">
-              <b className="text-sm">Avisos</b>
-              <p className="text-sm">
-                Feriado nesta quinta-feira dia 25
-              </p>
-            </div>
           </section>
           :
           <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-3 flex flex-col items-center mb-3">

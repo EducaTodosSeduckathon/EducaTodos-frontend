@@ -7,6 +7,7 @@ import { AuthContext } from '../../context/AuthProvider';
 import VisualAdjustments from '../experiences/visual/VisualAdjustments';
 import Button from '../ui/button/Button';
 import ModalSugestoes from './ModalSugestoes';
+import { FaBars } from 'react-icons/fa6';
 
 function LinearHeader({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityDescription = 'Leitura e Libras'}) {
 
@@ -34,8 +35,8 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
         {!custom ?
           <section className="relative w-full max-w-xs bg-white rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center mb-3">
             <button onClick={() => setModalSugestoes(true)} className="w-20 h-20 absolute right-[-10px] top-[-10px] text-xs p-1 flex flex-col justify-center items-center rounded-full bg-amber-100 border border-amber-400">
-              <FaCommentDots className='text-amber-500 text-xl' />
-              Sugestões e Denúncias
+              <FaBars className='text-xl text-amber-500' />
+              {/* Sugestões e Denúncias */}
             </button>
             <div className="flex w-full gap-2 items-center mb-2">
               <img

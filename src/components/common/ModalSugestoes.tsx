@@ -2,8 +2,17 @@ import { useState } from "react";
 import { Modal } from "../ui/modal";
 import { toast } from "react-toastify";
 
+import {
+  FaClock,
+  FaLightbulb,
+  FaTriangleExclamation,
+  FaUserSecret,
+  FaChevronLeft,
+  FaPaperPlane,
+} from "react-icons/fa6";
+
 export default function ModalSugestoes({ isOpen, onClose }) {
-  const [etapa, setEtapa] = useState<"tipo" | "texto">("tipo");
+  const [etapa, setEtapa] = useState<"tipo" | "texto" | "horario">("tipo");
   const [tipoSelecionado, setTipoSelecionado] = useState<null | string>(null);
   const [texto, setTexto] = useState("");
 
@@ -19,19 +28,33 @@ export default function ModalSugestoes({ isOpen, onClose }) {
   };
 
   const handleSelecionarTipo = (tipo: string) => {
-    setTipoSelecionado(tipo);
-    setEtapa("texto");
+    if (tipo === "Horário Escolar") {
+      setEtapa("horario");
+    } else {
+      setTipoSelecionado(tipo);
+      setEtapa("texto");
+    }
   };
 
   const handleEnviar = () => {
-    console.log({
-      tipo: tipoSelecionado,
-      texto,
-    });
-
-    toast(`Enviado: ${tipoSelecionado}`, {type: 'success'});
+    toast(`Enviado: ${tipoSelecionado}`, { type: "success" });
     handleClose();
   };
+
+  const horarios = {
+    Segunda: ["Português", "Matemática", "História", "Ciências", "Educação Física"],
+    Terça: ["Geografia", "Matemática", "Português", "Artes", "Ciências"],
+    Quarta: ["Matemática", "História", "Português", "Geografia", "Inglês"],
+    Quinta: ["Ciências", "Matemática", "Português", "Artes", "História"],
+    Sexta: ["Educação Física", "Matemática", "Ciências", "Português", "Geografia"],
+  };
+
+  const opcoes = [
+    { nome: "Horário Escolar", icone: <FaClock />, cor: "bg-blue-100 hover:bg-blue-200 text-blue-900" },
+    { nome: "Sugestão", icone: <FaLightbulb />, cor: "bg-yellow-100 hover:bg-yellow-200 text-yellow-700" },
+    { nome: "Denúncia", icone: <FaTriangleExclamation />, cor: "bg-red-100 hover:bg-red-200 text-red-700" },
+    { nome: "Denúncia Anônima", icone: <FaUserSecret />, cor: "bg-purple-100 hover:bg-purple-200 text-purple-700" },
+  ];
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} className="max-w-[700px] m-4">
@@ -39,16 +62,24 @@ export default function ModalSugestoes({ isOpen, onClose }) {
         {etapa === "tipo" && (
           <>
             <h4 className="mb-6 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Sugestões e Denúncias
+              Menu de Opções
             </h4>
+            <div className="py-1 px-2 bg-amber-200 my-5 rounded-xl w-full">
+              <b className="text-sm">Avisos</b>
+              <p className="text-sm">
+                Feriado nesta quinta-feira dia 25
+              </p>
+            </div>
+            <hr className="mb-3"/>
             <div className="flex flex-col gap-4">
-              {["Sugestão", "Denúncia", "Denúncia Anônima"].map((tipo) => (
+              {opcoes.map(({ nome, icone, cor }) => (
                 <button
-                  key={tipo}
-                  onClick={() => handleSelecionarTipo(tipo)}
-                  className="w-full rounded-xl bg-blue-100 hover:bg-blue-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] px-4 py-3 text-center font-semibold text-blue-900 dark:text-white transition"
+                  key={nome}
+                  onClick={() => handleSelecionarTipo(nome)}
+                  className={`flex items-center gap-3 w-full rounded-xl ${cor} dark:bg-white/[0.05] dark:hover:bg-white/[0.1] px-4 py-3 text-left font-semibold transition`}
                 >
-                  {tipo}
+                  <span className="text-xl">{icone}</span>
+                  {nome}
                 </button>
               ))}
             </div>
@@ -85,14 +116,66 @@ export default function ModalSugestoes({ isOpen, onClose }) {
                 onClick={() => setEtapa("tipo")}
                 className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300"
               >
-                Voltar
+                <FaChevronLeft /> Voltar
               </button>
               <button
                 onClick={handleEnviar}
                 className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                 disabled={!texto.trim()}
               >
-                Enviar
+                <FaPaperPlane /> Enviar
+              </button>
+            </div>
+          </>
+        )}
+
+        {etapa === "horario" && (
+          <>
+            <h4 className="mb-4 text-2xl font-semibold text-gray-800 dark:text-white/90">
+              Horário Escolar
+            </h4>
+
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto border-collapse text-sm">
+                <thead>
+                  <tr>
+                    <th className="border px-2 py-2 dark:border-gray-600">Dia</th>
+                    {[1, 2, 3, 4, 5].map((aula) => (
+                      <th key={aula} className="border px-2 py-2 dark:border-gray-600">
+                        {aula}ª Aula
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(horarios).map(([dia, aulas]) => (
+                    <tr key={dia}>
+                      <td className="border px-2 py-2 font-semibold dark:border-gray-600">
+                        {dia}
+                      </td>
+                      {aulas.map((aula, index) => (
+                        <td key={index} className="border px-2 py-2 dark:border-gray-600">
+                          {aula}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 mt-6">
+              <button
+                onClick={() => setEtapa("tipo")}
+                className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300"
+              >
+                <FaChevronLeft /> Voltar
+              </button>
+              <button
+                onClick={handleClose}
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              >
+                Fechar
               </button>
             </div>
           </>
