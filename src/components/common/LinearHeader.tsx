@@ -1,16 +1,21 @@
-import React, { useContext } from 'react';
-import { FaEyeSlash, FaSchool } from 'react-icons/fa';
+import React, { useContext, useState } from 'react';
+import { FaCommentDots, FaEyeSlash, FaSchool } from 'react-icons/fa';
 import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthProvider';
 import VisualAdjustments from '../experiences/visual/VisualAdjustments';
+import Button from '../ui/button/Button';
+import ModalSugestoes from './ModalSugestoes';
 
 function LinearHeader({ custom = false, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityDescription = 'Leitura e Libras'}) {
 
   const navigate = useNavigate()
 
   const { logout } = useContext(AuthContext);
+
+    const [modalSugestoes, setModalSugestoes] = useState(false);
+  
 
   return (
     <>
@@ -27,7 +32,11 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
       </header>
       <div className="flex justify-center mt-3">
         {!custom ?
-          <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center mb-3">
+          <section className="relative w-full max-w-xs bg-white rounded-2xl shadow-lg px-3 py-3 flex flex-col items-center mb-3">
+            <button onClick={() => setModalSugestoes(true)} className="w-20 h-20 absolute right-[-10px] top-[-10px] text-xs p-1 flex flex-col justify-center items-center rounded-full bg-amber-100 border border-amber-400">
+              <FaCommentDots className='text-amber-500 text-xl' />
+              Sugestões e Denúncias
+            </button>
             <div className="flex w-full gap-2 items-center mb-2">
               <img
                 src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg"
@@ -60,6 +69,8 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
 
         }
       </div>
+      <ModalSugestoes isOpen={modalSugestoes} onClose={() => setModalSugestoes(false)} />
+      
     </>
   );
 }

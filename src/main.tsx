@@ -9,6 +9,7 @@ import { AppWrapper } from "./components/common/PageMeta.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { AuthProvider } from "./context/AuthProvider.tsx";
 import App2 from "./App2.tsx";
+ import { ToastContainer } from 'react-toastify';
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
       <AppWrapper>
         <AuthProvider>
           <App />
+          <ToastContainer />
         </AuthProvider>
       </AppWrapper>
     </ThemeProvider>

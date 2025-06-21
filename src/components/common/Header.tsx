@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaEyeSlash, FaSchool } from 'react-icons/fa';
 import Logo from '../../images/logov.png';
 import { FaChevronLeft, FaCircleChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthProvider';
-import { FaEarDeaf } from 'react-icons/fa6';
+import { FaCommentDots, FaEarDeaf } from 'react-icons/fa6';
+import Button from '../ui/button/Button';
+import ModalSugestoes from './ModalSugestoes';
 
 function Header({ custom = false, hide, back = true, icon, color, title, desc, accessibility = 'Auditiva', accessibilityIcon = <FaEarDeaf/>, accessibilityDescription = 'Leitura e Libras'}) {
 
@@ -12,9 +14,11 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
 
   const { logout } = useContext(AuthContext);
 
+  const [modalSugestoes, setModalSugestoes] = useState(false);
+
   return (
     <>
-      <header className="sticky top-0 w-full px-5 py-2 bg-white dark:bg-[#000] shadow-sm flex justify-between">
+      <header className="sticky top-0 w-full px-5 py-2 bg-white dark:bg-[#000] shadow-sm flex justify-between z-999">
         {back ? <button 
           type="button"
           onClick={() => navigate(-1)}
@@ -27,7 +31,11 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
       </header>
       {!hide && <div className="flex justify-center mt-3">
         {!custom ?
-          <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-7 flex flex-col items-center mb-3">
+          <section className="relative w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-7 flex flex-col items-center mb-3">
+            <Button onClick={() => setModalSugestoes(true)} className="absolute left-2 top-2 text-sm p-1 " variant='outline' size='xs'>
+              <FaCommentDots className='text-blue-400' />
+              Sugestões<br/>e Denúncias
+            </Button>
             <div className="flex flex-col items-center mb-3">
               <img
                 src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg"
@@ -44,6 +52,13 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
               <span className="text-xs text-[#3653B4] font-semibold">Deficiência {accessibility}</span>
               <span className="text-xs text-[#A4B1C8] ml-1">({accessibilityDescription})</span>
             </div>
+
+            <div className="py-1 px-2 bg-amber-200 mt-3 rounded-xl w-full">
+              <b className="text-sm">Avisos</b>
+              <p className="text-sm">
+                Feriado nesta quinta-feira dia 25
+              </p>
+            </div>
           </section>
           :
           <section className="w-full max-w-xs bg-white rounded-2xl shadow-lg px-6 py-3 flex flex-col items-center mb-3">
@@ -58,6 +73,7 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
 
         }
       </div>}
+      <ModalSugestoes isOpen={modalSugestoes} onClose={() => setModalSugestoes(false)} />
     </>
   );
 }
