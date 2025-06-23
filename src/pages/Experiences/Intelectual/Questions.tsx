@@ -64,11 +64,6 @@ const questions = [
 
 export default function Questions({ icone = <FaQuestion />, cor = '#ED5555'}) {
 
-  const [materiaLibras, setMateriaLibras] = useState(null);
-
-  const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
-
   const { setHeaderOptions } = useOutletContext();
 
   useEffect(() => {
