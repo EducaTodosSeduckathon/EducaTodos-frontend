@@ -3,7 +3,7 @@ const getAccessToken = () => JSON.parse(localStorage.getItem('access_token'));
 const getAccessibilityType = () => JSON.parse(localStorage.getItem('accessibility_type'));
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://educatodos.xception.in/api',
   headers: {
     'Content-Type': 'application/json'
   }
