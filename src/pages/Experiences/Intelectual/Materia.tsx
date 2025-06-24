@@ -1,37 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
 import {
-  FaHandSparkles,
-  FaChevronRight,
-  FaXmark,
-  FaFile,
   FaFaceSmile,
+  FaFile,
 } from "react-icons/fa6";
 import Footer from "../../../components/common/Footer";
 import { AuthContext } from "../../../context/AuthProvider";
 import { useTheme } from "../../../context/ThemeContext";
-
-const materias = [
-  {
-    id: "portugues",
-    nome: "Ortografia e acentuação",
-    descricao: "Aprenda as regras de ortografia e o uso correto dos acentos gráficos.",
-  },
-  {
-    id: "matematica",
-    nome: "Interpretação de texto",
-    descricao: "Dicas para compreender e analisar textos de diferentes gêneros.",
-  },
-];
+import api from "../../../services/api";
+import Spinner from "../../../components/common/Spinner";
 
 export default function Materia() {
-  const [materiaLibras, setMateriaLibras] = useState<string | null>(null);
-  const abrirLibras = (nome: string) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
-
+  const { disciplinaId } = useParams();
+  const [conteudos, setConteudos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { setHeaderOptions } = useOutletContext();
 
+  const { setHeaderOptions } = useOutletContext();
   const { themeOptions } = useContext(AuthContext);
   const { theme } = useTheme();
 
@@ -41,9 +26,28 @@ export default function Materia() {
       icon: <FaFile />,
       color: "#465fff",
       title: "Conteúdos",
-      desc: "Português",
+      desc: "Português", // Você pode trocar por o nome real da disciplina se necessário
     });
   }, []);
+
+  useEffect(() => {
+    if (disciplinaId) {
+      fetchConteudos();
+    }
+  }, [disciplinaId]);
+
+  const fetchConteudos = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.get(`/student/disciplinas/${disciplinaId}/conteudos`);
+      setConteudos(data.data);
+    } catch (error) {
+      console.error("Erro ao carregar conteúdos:", error);
+      alert("Erro ao carregar conteúdos.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getTextClass = () => {
     let classes = "";
@@ -69,25 +73,33 @@ export default function Materia() {
               Conteúdos
             </h3>
           </div>
-          <div className="flex flex-col gap-3">
-            {materias.map(({ id, nome, descricao }) => (
-              <div
-                key={id}
-                onClick={() => navigate(`/materias/${id}/conteudos/ortografia`)}
-                className={`${cardBgClass} rounded-2xl p-4 shadow-sm flex items-center gap-3 cursor-pointer`}
-              >
-                <div className="flex flex-col text-center flex-1">
-                  <FaFaceSmile className="self-center text-blue-300 text-2xl mb-3" />
-                  <span className={`font-semibold text-base ${theme === "dark" ? "text-white" : "text-[#253858]"} ${getTextClass()}`}>
-                    {nome}
-                  </span>
-                  <span className={`text-xs ${descriptionColor}`}>
-                    {descricao}
-                  </span>
+
+          {loading ? (
+            <Spinner />
+          ) : (
+            <div className="flex flex-col gap-3">
+              {conteudos.map(({ id, title, description }) => (
+                <div
+                  key={id}
+                  onClick={() => navigate(`/materias/${disciplinaId}/conteudos/${id}`)}
+                  className={`${cardBgClass} rounded-2xl p-4 shadow-sm flex items-center gap-3 cursor-pointer`}
+                >
+                  <div className="flex flex-col text-center flex-1">
+                    <FaFaceSmile className="self-center text-blue-300 text-2xl mb-3" />
+                    <span className={`font-semibold text-base ${theme === "dark" ? "text-white" : "text-[#253858]"} ${getTextClass()}`}>
+                      {title}
+                    </span>
+                    <span className={`text-xs ${descriptionColor}`}>
+                      {description}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+              {conteudos.length === 0 && (
+                <p className="text-center text-sm text-gray-500">Nenhum conteúdo disponível.</p>
+              )}
+            </div>
+          )}
         </section>
 
         <div className={`mt-6 text-sm text-[#4F5B69] dark:text-white text-center ${getTextClass()}`}>
@@ -96,7 +108,6 @@ export default function Materia() {
       </main>
 
       <Footer />
-
     </div>
   );
 }

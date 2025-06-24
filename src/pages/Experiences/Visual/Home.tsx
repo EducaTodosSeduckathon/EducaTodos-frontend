@@ -20,49 +20,32 @@ export default function Home() {
   const { setHeaderOptions } = useOutletContext();
   const { themeOptions } = useContext(AuthContext);
 
+  
   const materias = [
     {
-      id: "portugues",
-      nome: "Português",
-      descricao: "Leitura, gramática e redação",
-      cor: "#2F80ED",
-      icone: <FaBookOpen aria-hidden="true" />,
-      onClick: () => navigate("materias/portugues/conteudos"),
+      id: 1,
+      nome: 'Língua Portuguesa',
+      cor: '#2F80ED',
+      icone: <FaBookOpen />,
+      onClick: () => navigate(`materias/${1}/conteudos`),
     },
     {
-      id: "matematica",
-      nome: "Matemática",
-      descricao: "Números, operações e lógica",
-      cor: "#FFB946",
-      icone: <FaSquareRootVariable aria-hidden="true" />,
-      onClick: () => navigate("materias/matematica/conteudos"),
+      id: 2,
+      nome: 'Matemática',
+      cor: '#FFB946',
+      icone: <FaSquareRootVariable />,
+      onClick: () => navigate(`materias/${2}/conteudos`),
+
     },
     {
-      id: "ciencias",
-      nome: "Ciências",
-      descricao: "Natureza, experiências e descobertas",
-      cor: "#21C87A",
-      icone: <FaFlaskVial aria-hidden="true" />,
-      onClick: () => navigate("materias/ciencias/conteudos"),
-    },
-    {
-      id: "historia",
-      nome: "História",
-      descricao: "Fatos, civilizações e culturas",
-      cor: "#ED5555",
-      icone: <FaLandmark aria-hidden="true" />,
-      onClick: () => navigate("materias/historia/conteudos"),
-    },
-    {
-      id: "geografia",
-      nome: "Geografia",
-      descricao: "Territórios, clima e mapas",
-      cor: "#8B5CF6",
-      icone: <FaEarthAmericas aria-hidden="true" />,
-      onClick: () => navigate("materias/geografia/conteudos"),
+      id: 3,
+      nome: 'História',
+      cor: '#ED5555',
+      icone: <FaLandmark />,
+      onClick: () => navigate(`materias/${3}/conteudos`),
+
     },
   ];
-
   const getTextClass = () => {
     let classes = "";
     if (themeOptions?.fontSize === 1.2) classes += " text-lg";
@@ -91,7 +74,7 @@ export default function Home() {
   );
 
   const handleSwipe = (index: number) => {
-    speak(materias[index].nome + ". " + materias[index].descricao);
+    speak(materias[index].nome + ". ");
   };
 
   return (

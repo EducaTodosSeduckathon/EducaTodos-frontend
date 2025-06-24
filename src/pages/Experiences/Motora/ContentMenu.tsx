@@ -23,7 +23,7 @@ import {
   FaFile
 } from 'react-icons/fa6';
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
 import VoiceFooter from "../../../components/experiences/motora/VoiceFooter";
 
 const materias = [
@@ -54,10 +54,8 @@ export default function Materia() {
 
   const { setHeaderOptions } = useOutletContext();
 
-  const [materiaLibras, setMateriaLibras] = useState(null);
+  const { disciplinaId, conteudo } = useParams();
 
-  const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
 
   const navigate = useNavigate();
 
@@ -93,6 +91,12 @@ export default function Materia() {
     focusItem(prev);
   };
 
+  const handleCommand = (command) => {
+    if(command.includes('resumo')){
+      navigate(`/materias/${disciplinaId}/conteudos/${conteudo}/resumo`)
+    }
+  }
+
   return (
     <div className="bg-[#F6F8FB] flex flex-1 flex-col justify-between">
 
@@ -108,7 +112,7 @@ export default function Materia() {
               ref={el => itemRefs.current[0] = el}
               tabIndex={0}
               subtitle='Principais conceitos, definições e exemplos'
-              onClick={() => navigate('/materias/portugues/conteudos/ortografia/resumo')}
+              onClick={() => navigate(`/materias/${disciplinaId}/conteudos/${conteudo}/resumo`)}
               color='#21C87A'
               icon={<FaFolderOpen />}
             />
@@ -134,7 +138,7 @@ export default function Materia() {
         </section>
       </main>
 
-    <VoiceFooter onScrollUp={focusPrev} onScrollDown={focusNext} />
+    <VoiceFooter onCommand={handleCommand} onScrollUp={focusPrev} onScrollDown={focusNext} />
 
     </div>
   );

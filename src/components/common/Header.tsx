@@ -12,7 +12,7 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
 
   const navigate = useNavigate()
 
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
 
   const [modalSugestoes, setModalSugestoes] = useState(false);
 
@@ -42,8 +42,8 @@ function Header({ custom = false, hide, back = true, icon, color, title, desc, a
                 alt="Avatar do Aluno"
                 className="w-16 h-16 rounded-full border-4 border-[#E4EDFB] object-cover mb-2"
               />
-              <h2 className="text-lg font-bold text-[#233366]">Olá, João Pedro!</h2>
-              <span className="text-xs text-[#6D7B97] mt-1">Aluno do 7º ano • Turma B</span>
+              <h2 className="text-lg font-bold text-[#233366]">Olá, {user?.name}!</h2>
+              <span className="text-xs text-[#6D7B97] mt-1">{user?.student_info?.turma?.name}</span>
             </div>
             <div className="mt-3 flex items-center gap-2 bg-[#E4EDFB] rounded-lg px-3 py-1">
               <div className='text-sm text-brand-800'>

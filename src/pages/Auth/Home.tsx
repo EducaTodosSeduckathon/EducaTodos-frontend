@@ -47,7 +47,7 @@ export default function Home() {
 
   useEffect(() => {
     if(accessibilityType){
-      setToken(accessToken);
+      setToken(accessToken || '');
       window.location.href = '/';
     }
   }, [accessibilityType])

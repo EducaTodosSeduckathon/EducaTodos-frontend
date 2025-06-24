@@ -12,11 +12,11 @@ export default function AuditivaRoutes() {
     <Routes>
       <Route path="/*" element={<ExperienceLayout />}>
         <Route path="" element={<AuditivaHome />} />
-        <Route path="materias/:materia/conteudos" element={<AuditivaMateria />} />
-        <Route path="materias/:materia/conteudos/:conteudo" element={<AuditivaContentMenu />} />
-        <Route path="materias/:materia/conteudos/:conteudo/resumo" element={<AuditivaResume />} />
-        <Route path="materias/:materia/conteudos/:conteudo/extras" element={<AuditivaExtras />} />
-        <Route path="materias/:materia/conteudos/:conteudo/questoes" element={<AuditivaQuestions />} />
+        <Route path="materias/:disciplinaId/conteudos" element={<AuditivaMateria />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo" element={<AuditivaContentMenu />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/resumo" element={<AuditivaResume />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/extras" element={<AuditivaExtras />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/questoes" element={<AuditivaQuestions />} />
       </Route>
 
     </Routes>

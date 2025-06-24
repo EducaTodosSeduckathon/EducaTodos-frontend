@@ -16,12 +16,26 @@ import { FaAdjust, FaUndo } from "react-icons/fa";
 import { useTheme } from "../../../context/ThemeContext";
 import { AuthContext } from "../../../context/AuthProvider";
 
+
 const materias = [
-  { id: "portugues", nome: "Português", cor: "#2F80ED", icone: <FaBookOpen /> },
-  { id: "matematica", nome: "Matemática", cor: "#FFB946", icone: <FaSquareRootVariable /> },
-  { id: "ciencias", nome: "Ciências", cor: "#21C87A", icone: <FaFlaskVial /> },
-  { id: "historia", nome: "História", cor: "#ED5555", icone: <FaLandmark /> },
-  { id: "geografia", nome: "Geografia", cor: "#8B5CF6", icone: <FaEarthAmericas /> },
+  {
+    id: 1,
+    nome: 'Língua Portuguesa',
+    cor: '#2F80ED',
+    icone: <FaBookOpen />,
+  },
+  {
+    id: 2,
+    nome: 'Matemática',
+    cor: '#FFB946',
+    icone: <FaSquareRootVariable />,
+  },
+  {
+    id: 3,
+    nome: 'História',
+    cor: '#ED5555',
+    icone: <FaLandmark />,
+  },
 ];
 
 export default function Home() {
@@ -59,7 +73,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`flex flex-col justify-between min-h-screen transition`}>
+    <div className={`flex flex-col justify-between h-screen transition`}>
       <main className={`flex-1 flex flex-col items-center px-4 pt-5 ${getTextClass()}`}>
         {/* 🔧 Ajustes Visuais */}
         <div className="w-full max-w-md bg-white shadow-md rounded-2xl dark:bg-black dark:border-2 p-4 mb-5 flex flex-col gap-2">

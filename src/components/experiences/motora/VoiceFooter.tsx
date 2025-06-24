@@ -7,9 +7,11 @@ const scrollAmount = 300;
 const VoiceFooter = ({
   onScrollUp,
   onScrollDown,
+  onCommand
 }: {
   onScrollUp?: () => void;
   onScrollDown?: () => void;
+  onCommand?: () => void;
 }) => {
   const [listening, setListening] = useState(false);
   const [status, setStatus] = useState<any>("Aguardando comando de voz...");
@@ -53,7 +55,7 @@ const VoiceFooter = ({
     recog.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript.toLowerCase();
       console.log("Comando:", transcript);
-
+      
       setStatus(`Comando recebido: "${transcript}"`);
       handleCommand(transcript);
 
@@ -74,8 +76,6 @@ const VoiceFooter = ({
     setRecognition(recog);
   }, []);
 
-  const navigate = useNavigate();
-
   const handleCommand = (command: string) => {
     if (command.includes("subir")) {
       scrollUp();
@@ -83,12 +83,20 @@ const VoiceFooter = ({
       scrollDown();
     } else if (command.includes("voltar")) {
       window.history.back();
-    } else if (command.includes("português") || command.includes("portugues")) {
-      setStatus("Reconhecendo: Português");
-      // Aqui você poderia usar um router, exemplo: 
-      navigate('/materias/portugues/conteudos')
+    } else if (
+      command.includes("entrar") ||
+      command.includes("confirmar") ||
+      command.includes("selecionar")
+    ) {
+      const active = document.activeElement as HTMLElement;
+      if (active) {
+        active.click();
+        setStatus("Elemento focado acionado.");
+      } else {
+        setStatus("Nenhum elemento focado.");
+      }
     } else {
-      setStatus(<span className="text-red-600">Comando não reconhecido: <b>{command}</b></span>);
+      onCommand && onCommand(command)
     }
   };
 
@@ -119,6 +127,7 @@ const VoiceFooter = ({
           <span className="text-xs text-[#A4B1C8] mb-3 text-center">{status}</span>
           <button
             onClick={toggleListening}
+            id="microphone-toggle"
             className={`w-22 h-22 rounded-full ${
               listening ? "bg-[#30C185]" : "bg-[#E4EDFB]"
             } flex items-center justify-center shadow-lg active:scale-90 outline-none focus:ring-2 focus:ring-[#3653B4] transition`}

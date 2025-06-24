@@ -1,114 +1,131 @@
-// src/pages/auditiva/HomePage.tsx
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import Header from "../../../components/common/Header";
 import Footer from "../../../components/common/Footer";
+import { FaChevronRight, FaFileLines, FaHandSparkles, FaXmark } from "react-icons/fa6";
+import api from "../../../services/api";
+import Spinner from "../../../components/common/Spinner";
 
-import {
-  FaGraduationCap,
-  FaUniversalAccess,
-  FaUserGraduate,
-  FaPenToSquare,
-  FaBookOpen,
-  FaSquareRootVariable,
-  FaFlaskVial,
-  FaLandmark,
-  FaEarthAmericas,
-  FaHandSparkles,
-  FaChevronRight,
-  FaXmark,
-  FaRegCopyright,
-  FaEyeSlash,
-  FaFile
-} from 'react-icons/fa6';
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
-
-const materias = [
-  {
-    id: 'portugues',
-    nome: 'Ortografia e acentuação',
-    descricao: 'Aprenda as regras de ortografia e o uso correto dos acentos gráficos.',
-  },
-  {
-    id: 'matematica',
-    nome: 'Interpretação de texto',
-    descricao: 'Dicas para compreender e analisar textos de diferentes gêneros.',
-  },
-];
-
-export default function Materia() {
-
-  const [materiaLibras, setMateriaLibras] = useState(null);
-
-  const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
-
+export default function Materia({ icone = <FaFileLines />,  cor = '#2F80ED' }) {
+  const { disciplinaId } = useParams();
   const navigate = useNavigate();
-
   const { setHeaderOptions } = useOutletContext();
 
+  const [conteudos, setConteudos] = useState<
+    { id: number; title: string; description: string }[]
+  >([]);
+  const [disciplina, setDisciplina] = useState<{ id: number; name: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [materiaLibras, setMateriaLibras] = useState<string | null>(null);
+
   useEffect(() => {
-    setHeaderOptions({
-      custom: true,
-      icon: <FaFile/>,
-      color: '#465fff',
-      title: 'Conteúdos',
-      desc: 'Português'
-    });
-  }, [])
+    if (!disciplinaId) return;
+    fetchData();
+  }, [disciplinaId]);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [conteudosRes, disciplinaRes] = await Promise.all([
+        api.get(`/student/disciplinas/${disciplinaId}/conteudos`),
+        api.get(`/student/disciplinas/${disciplinaId}`)
+      ]);
+
+      setConteudos(conteudosRes.data.data);
+      setDisciplina(disciplinaRes.data.data);
+
+      setHeaderOptions({
+        custom: true,
+        title: 'Conteúdos',
+        icon: icone,
+        color: cor,
+        desc: disciplinaRes.data.data.name || ''
+      });
+    } catch (e) {
+      console.error(e);
+      alert("Erro ao carregar os dados.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const abrirLibras = (titulo: string) => setMateriaLibras(titulo);
+  const fecharLibras = () => setMateriaLibras(null);
 
   return (
     <div className="bg-[#F6F8FB] min-h-screen flex flex-col justify-between">
-
       <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
-
-        <section className="w-full max-w-xs flex flex-col">
-          <div className="flex flex-row items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-[#233366]">Conteúdos</h3>
-          </div>
-          <div className="flex flex-col gap-3">
-          {materias.map(({ id, nome, descricao }) => (
-              <div onClick={() => navigate('/materias/portugues/conteudos/ortografia')} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
-                <div className="flex flex-col flex-1">
-                  <span className="font-semibold text-[#253858] text-base">{nome}</span>
-                  <span className="text-xs text-[#7B8794]">{descricao}</span>
-                </div>
-                <button
-                  className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-xs font-semibold active:bg-[#21C87A]/20"
-                  onClick={() => abrirLibras(nome)}
+        {loading ? (
+          <Spinner />
+        ) : (
+          <section className="w-full max-w-xs flex flex-col">
+            <h3 className="text-base font-bold text-[#233366] mb-4">Conteúdos</h3>
+            <div className="flex flex-col gap-3">
+              {conteudos.map(({ id, title, description }) => (
+                <div
+                  key={id}
+                  onClick={() =>
+                    navigate(`/materias/${disciplinaId}/conteudos/${id}`)
+                  }
+                  className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3"
                 >
-                  <FaHandSparkles /> Libras
-                </button>
-                <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
-                  <FaChevronRight />
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="flex flex-col items-center mt-4">
-          <span className="text-xs text-[#4F5B69] mb-1 text-center">
-            Toque no botão
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#21C87A]/10 rounded-md text-[#21C87A] font-bold ml-1">
-              <FaHandSparkles /> Libras
-            </span>
-            para assistir à explicação em Língua Brasileira de Sinais.
-          </span>
-        </section>
+                  <div className="flex flex-col flex-1">
+                    <span className="font-semibold text-[#253858] text-base">
+                      {title}
+                    </span>
+                    <span className="text-xs text-[#7B8794]">
+                      {description}
+                    </span>
+                  </div>
+                  <button
+                    className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-xs font-semibold active:bg-[#21C87A]/20"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      abrirLibras(title);
+                    }}
+                  >
+                    <FaHandSparkles /> Libras
+                  </button>
+                  <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
+                    <FaChevronRight />
+                  </button>
+                </div>
+              ))}
+              {conteudos.length === 0 && (
+                <p className="text-center text-gray-500">
+                  Nenhum conteúdo disponível.
+                </p>
+              )}
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />
 
       {materiaLibras && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={fecharLibras}>
-          <div className="bg-white rounded-2xl p-6 w-[90vw] max-w-xs flex flex-col items-center shadow-lg relative" onClick={(e) => e.stopPropagation()}>
-            <button className="absolute top-3 right-3 text-[#A0AEC0] text-xl hover:text-[#ED5555] transition" onClick={fecharLibras}>
+        <div
+          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center"
+          onClick={fecharLibras}
+        >
+          <div
+            className="bg-white rounded-2xl p-6 w-[90vw] max-w-xs flex flex-col items-center shadow-lg relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-3 right-3 text-[#A0AEC0] text-xl hover:text-[#ED5555] transition"
+              onClick={fecharLibras}
+            >
               <FaXmark />
             </button>
             <div className="flex flex-col items-center mb-3">
               <FaHandSparkles className="text-3xl text-[#21C87A] mb-2" />
-              <span className="font-semibold text-[#253858] text-lg mb-1">Explicação em Libras</span>
-              <span className="text-xs text-[#7B8794] mb-2">{materiaLibras}</span>
+              <span className="font-semibold text-[#253858] text-lg mb-1">
+                Explicação em Libras
+              </span>
+              <span className="text-xs text-[#7B8794] mb-2">
+                {materiaLibras}
+              </span>
             </div>
             <div className="w-full h-44 rounded-xl bg-[#EAF1FB] flex items-center justify-center overflow-hidden mb-2">
               <img
@@ -124,31 +141,5 @@ export default function Materia() {
         </div>
       )}
     </div>
-  );
-}
-
-function SubjectButton({ icon, bgColor, title, subtitle, chevronColor }: any) {
-  return (
-    <button
-      className={`flex items-center gap-3 ${bgColor} rounded-xl py-3 px-4 focus:ring-2 transition cursor-pointer w-full`}
-    >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white">{icon}</div>
-      <div className="flex flex-col flex-1 items-start">
-        <span className="text-base font-semibold text-[#233366]">{title}</span>
-        <span className="text-xs text-[#6D7B97]">{subtitle}</span>
-      </div>
-      <FaChevronRight className={`text-[${chevronColor}]`} />
-    </button>
-  );
-}
-
-function LoginOption({ icon, label, bg }: any) {
-  return (
-    <button
-      className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 ${bg} rounded-xl focus:ring-2 transition cursor-pointer`}
-    >
-      <div className="text-lg">{icon}</div>
-      <span className="text-xs font-medium text-[#233366]">{label}</span>
-    </button>
   );
 }

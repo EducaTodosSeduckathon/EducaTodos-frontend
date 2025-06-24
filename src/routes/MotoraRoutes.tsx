@@ -12,11 +12,11 @@ export default function MotoraRoutes() {
     <Routes>
       <Route path="/*" element={<ExperienceLayout />}>
         <Route path="" element={<MotoraHome />} />
-        <Route path="materias/:materia/conteudos" element={<MotoraMateria />} />
-        <Route path="materias/:materia/conteudos/:conteudo" element={<MotoraContentMenu />} />
-        <Route path="materias/:materia/conteudos/:conteudo/resumo" element={<MotoraResume />} />
-        <Route path="materias/:materia/conteudos/:conteudo/extras" element={<MotoraExtras />} />
-        <Route path="materias/:materia/conteudos/:conteudo/questoes" element={<MotoraQuestions />} />
+        <Route path="materias/:disciplinaId/conteudos" element={<MotoraMateria />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo" element={<MotoraContentMenu />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/resumo" element={<MotoraResume />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/extras" element={<MotoraExtras />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/questoes" element={<MotoraQuestions />} />
       </Route>
 
     </Routes>

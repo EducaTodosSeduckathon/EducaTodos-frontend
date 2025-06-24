@@ -23,7 +23,7 @@ import {
   FaFile
 } from 'react-icons/fa6';
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
 import { speak } from "../../../services/utils";
 import useLongClick from "../../../hooks/useLongClick";
 import VerticalCarousel from "../../../components/experiences/visual/VerticalCarousel";
@@ -36,8 +36,8 @@ export default function Materia() {
 
   const [materiaLibras, setMateriaLibras] = useState(null);
 
-  const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
+
+  const { disciplinaId, conteudo } = useParams();
 
   const navigate = useNavigate();
   
@@ -48,7 +48,7 @@ export default function Materia() {
       descricao: 'Principais conceitos, definições e exemplos',
       cor: '#2F80ED',
       icone: <FaFileLines />,
-      onClick: () => navigate('/materias/portugues/conteudos/ortografia/resumo')
+      onClick: () => navigate(`/materias/${disciplinaId}/conteudos/${conteudo}/resumo`)
     },
     {
       id: 'extras',

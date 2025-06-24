@@ -13,11 +13,11 @@ export default function VisualRoutes() {
     <Routes>
       <Route path="/*" element={<ExperienceVisualLayout />}>
         <Route path="" element={<VisualHome />} />
-        <Route path="materias/:materia/conteudos" element={<VisualMateria />} />
-        <Route path="materias/:materia/conteudos/:conteudo" element={<VisualContentMenu />} />
-        <Route path="materias/:materia/conteudos/:conteudo/resumo" element={<VisualResume />} />
-        <Route path="materias/:materia/conteudos/:conteudo/extras" element={<VisualExtras />} />
-        <Route path="materias/:materia/conteudos/:conteudo/questoes" element={<VisualQuestions />} />
+        <Route path="materias/:disciplinaId/conteudos" element={<VisualMateria />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo" element={<VisualContentMenu />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/resumo" element={<VisualResume />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/extras" element={<VisualExtras />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/questoes" element={<VisualQuestions />} />
       </Route>
 
     </Routes>

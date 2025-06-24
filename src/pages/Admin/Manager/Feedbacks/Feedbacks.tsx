@@ -99,10 +99,10 @@ export default function Feedbacks() {
                       </span>
                     </TableCell>
                     <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
-                      {fb.text.length > 60 ? fb.text.substring(0, 60) + "..." : fb.text}
+                      {fb.description.length > 60 ? fb.description.substring(0, 60) + "..." : fb.description}
                     </TableCell>
                     <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
-                      {new Date(fb.date).toLocaleDateString("pt-BR")}
+                      {new Date(fb.created_at).toLocaleDateString("pt-BR")}
                     </TableCell>
                     <TableCell className="px-5 py-4 text-start">
                       <div className="flex gap-3">
@@ -138,10 +138,10 @@ export default function Feedbacks() {
               Feedback de {feedbackSelecionado?.student_name}
             </h4>
             <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-              Data: {new Date(feedbackSelecionado?.date || "").toLocaleDateString("pt-BR")}
+              Data: {new Date(feedbackSelecionado?.created_at || "").toLocaleDateString("pt-BR")}
             </p>
             <div className="bg-gray-100 dark:bg-white/[0.05] rounded-lg p-4 text-gray-700 dark:text-gray-300">
-              {feedbackSelecionado?.text}
+              {feedbackSelecionado?.description}
             </div>
           </div>
 

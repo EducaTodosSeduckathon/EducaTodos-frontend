@@ -24,41 +24,25 @@ import { useNavigate, useOutletContext } from "react-router";
 import VoiceFooter from "../../../components/experiences/motora/VoiceFooter";
 import { useRef } from "react";
 
+
 const materias = [
   {
-    id: 'portugues',
-    nome: 'Português',
-    descricao: 'Leitura, gramática e redação',
+    id: 1,
+    nome: 'Língua Portuguesa',
     cor: '#2F80ED',
     icone: <FaBookOpen />,
   },
   {
-    id: 'matematica',
+    id: 2,
     nome: 'Matemática',
-    descricao: 'Números, operações e lógica',
     cor: '#FFB946',
     icone: <FaSquareRootVariable />,
   },
   {
-    id: 'ciencias',
-    nome: 'Ciências',
-    descricao: 'Natureza, experiências e descobertas',
-    cor: '#21C87A',
-    icone: <FaFlaskVial />,
-  },
-  {
-    id: 'historia',
+    id: 3,
     nome: 'História',
-    descricao: 'Fatos, civilizações e culturas',
     cor: '#ED5555',
     icone: <FaLandmark />,
-  },
-  {
-    id: 'geografia',
-    nome: 'Geografia',
-    descricao: 'Territórios, clima e mapas',
-    cor: '#8B5CF6',
-    icone: <FaEarthAmericas />,
   },
 ];
 
@@ -66,11 +50,6 @@ export default function Home() {
 
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [currentFocus, setCurrentFocus] = useState<number>(-1);
-
-  const [materiaLibras, setMateriaLibras] = useState(null);
-
-  const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
 
   const { setHeaderOptions } = useOutletContext();
 
@@ -104,8 +83,36 @@ export default function Home() {
   };
 
   const navigate = useNavigate();
+  const handleCommand = (command) => {
+
+    if(materias.some(m => m.nome.toLowerCase().includes(command))){
+      const m = materias.find(m => m.nome.toLowerCase().includes(command))
+      navigate(`/materias/${m.id}/conteudos`)
+    }
+
+  }
+
+  useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      focusNext();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      focusPrev();
+    } else if (e.code === "Space") {
+      e.preventDefault();
+      const micButton = document.querySelector("#microphone-toggle") as HTMLButtonElement;
+      micButton?.click();
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, [currentFocus]);
+
   return (
-    <div className="bg-[#F6F8FB] flex flex-col justify-between">
+    <div className="bg-[#F6F8FB] flex flex-col flex-1 justify-between">
       <main className="flex-1 flex flex-col items-center px-5 pt-4 pb-2">
 
         <section className="w-full max-w-xs flex flex-col">
@@ -113,14 +120,13 @@ export default function Home() {
             <h3 className="text-base font-bold text-[#233366]">Matérias</h3>
           </div>
           <div className="flex flex-col gap-3">
-          {materias.map(({ id, nome, descricao, cor, icone }, index) => (
-              <div ref={el => itemRefs.current[index] = el} tabIndex={0} onClick={() => navigate('/materias/portugues/conteudos')} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3 focus:ring-2 focus:ring-blue-500">
+          {materias.map(({ id, nome, cor, icone }, index) => (
+              <div ref={el => itemRefs.current[index] = el} tabIndex={0} onClick={() => navigate(`/materias/${id}/conteudos`)} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3 focus:ring-2 focus:ring-blue-500">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full text-xl shrink-0" style={{ backgroundColor: `${cor}1A`, color: cor }}>
                   {icone}
                 </div>
                 <div className="flex flex-col flex-1">
                   <span className="font-semibold text-[#253858] text-base">{nome}</span>
-                  <span className="text-xs text-[#7B8794]">{descricao}</span>
                 </div>
                 <button className="ml-2 text-[#A0AEC0] text-lg active:scale-90 transition">
                   <FaChevronRight />
@@ -131,7 +137,7 @@ export default function Home() {
         </section>
       </main>
 
-      <VoiceFooter onScrollUp={focusPrev} onScrollDown={focusNext} />
+      <VoiceFooter onCommand={handleCommand} onScrollUp={focusPrev} onScrollDown={focusNext} />
     </div>
   );
 }

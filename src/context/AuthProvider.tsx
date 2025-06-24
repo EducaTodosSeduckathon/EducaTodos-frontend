@@ -102,8 +102,11 @@ export const AuthProvider = ({ children }: Props) => {
   const { setTheme } = useTheme();
 
   const logout = () => {
-    setToken('');
+    // setToken('');
+    window.localStorage.removeItem('accessibility_type')
+    window.localStorage.removeItem('access_token')
     setUser(null);
+    // setAccessibilityType('');
     setThemeOptions(null);
     setTheme('light')
     window.location.href = '/'

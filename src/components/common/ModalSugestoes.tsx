@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "../ui/modal";
 import { toast } from "react-toastify";
 
@@ -10,11 +10,28 @@ import {
   FaChevronLeft,
   FaPaperPlane,
 } from "react-icons/fa6";
+import api from "../../services/api";
 
 export default function ModalSugestoes({ isOpen, onClose }) {
   const [etapa, setEtapa] = useState<"tipo" | "texto" | "horario">("tipo");
   const [tipoSelecionado, setTipoSelecionado] = useState<null | string>(null);
   const [texto, setTexto] = useState("");
+  const [avisos, setAvisos] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchAvisos();
+    }
+  }, [isOpen]);
+
+  const fetchAvisos = async () => {
+    try {
+      const { data } = await api.get("/student/avisos");
+      setAvisos(data.data || []);
+    } catch (error) {
+      console.error("Erro ao buscar avisos:", error);
+    }
+  };
 
   const resetar = () => {
     setEtapa("tipo");
@@ -36,9 +53,19 @@ export default function ModalSugestoes({ isOpen, onClose }) {
     }
   };
 
-  const handleEnviar = () => {
-    toast(`Enviado: ${tipoSelecionado}`, { type: "success" });
-    handleClose();
+  const handleEnviar = async () => {
+    try {
+      await api.post("/student/feedbacks", {
+        type: tipoSelecionado?.includes("Denúncia") ? "denuncia" : "feedback",
+        is_anonymous: tipoSelecionado === "Denúncia Anônima",
+        description: texto,
+      });
+      toast(`Enviado com sucesso: ${tipoSelecionado}`, { type: "success" });
+      handleClose();
+    } catch (error) {
+      console.error("Erro ao enviar feedback:", error);
+      toast("Erro ao enviar. Tente novamente.", { type: "error" });
+    }
   };
 
   const horarios = {
@@ -64,13 +91,19 @@ export default function ModalSugestoes({ isOpen, onClose }) {
             <h4 className="mb-6 text-2xl font-semibold text-gray-800 dark:text-white/90">
               Menu de Opções
             </h4>
-            <div className="py-1 px-2 bg-amber-200 my-5 rounded-xl w-full">
-              <b className="text-sm">Avisos</b>
-              <p className="text-sm">
-                Feriado nesta quinta-feira dia 25
-              </p>
-            </div>
-            <hr className="mb-3"/>
+
+            {avisos.length > 0 && (
+              <div className="py-1 px-2 bg-amber-200 my-5 rounded-xl w-full">
+                <b className="text-sm">Avisos</b>
+                <ul className="text-sm list-disc list-inside mt-1">
+                  {avisos.map((aviso, index) => (
+                    <li key={index}>{aviso.content}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <hr className="mb-3" />
             <div className="flex flex-col gap-4">
               {opcoes.map(({ nome, icone, cor }) => (
                 <button

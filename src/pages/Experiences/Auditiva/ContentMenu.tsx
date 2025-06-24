@@ -23,35 +23,14 @@ import {
   FaFile
 } from 'react-icons/fa6';
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
 
-const materias = [
-  {
-    id: 'resume',
-    nome: 'Resumo do conteúdo',
-    descricao: 'Principais conceitos, definições e exemplos',
-    cor: '#2F80ED',
-    icone: <FaFileLines />,
-  },
-  {
-    id: 'extras',
-    nome: 'Materiais Complementares',
-    descricao: 'Apostilas, vídeos e links úteis',
-    cor: '#21C87A',
-    icone: <FaFolderOpen />,
-  },
-  {
-    id: 'questions',
-    nome: 'Questões',
-    descricao: 'Exercícios e desafios para praticar',
-    cor: '#ED5555',
-    icone: <FaQuestion />,
-  },
-];
 
 export default function Materia() {
 
   const { setHeaderOptions } = useOutletContext();
+
+  const { disciplinaId, conteudo } = useParams();
 
   const [materiaLibras, setMateriaLibras] = useState(null);
 
@@ -83,21 +62,21 @@ export default function Materia() {
             <SubjectButton
               title='Resumo do conteúdo'
               subtitle='Principais conceitos, definições e exemplos'
-              onClick={() => navigate('/materias/portugues/conteudos/ortografia/resumo')}
+              onClick={() => navigate(`/materias/${disciplinaId}/conteudos/${conteudo}/resumo`)}
               color='#21C87A'
               icon={<FaFolderOpen />}
             />
             <SubjectButton
               title='Materiais Complementares'
               subtitle='Apostilas, vídeos e links úteis'
-              onClick={() => navigate('/materias/portugues/conteudos/ortografia/extras')}
+              onClick={() => navigate(`/materias/${disciplinaId}/conteudos/${conteudo}/extras`)}
               color='#2F80ED'
               icon={<FaFileLines />}
             />
             <SubjectButton
               title='Questões'
               subtitle='Exercícios e desafios para praticar'
-              onClick={() => navigate('/materias/portugues/conteudos/ortografia/questoes')}
+              onClick={() => navigate(`/materias/${disciplinaId}/conteudos/${conteudo}/questoes`)}
               color='#ED5555'
               icon={<FaQuestion />}
             />

@@ -1,79 +1,80 @@
 // src/pages/auditiva/HomePage.tsx
+
 import Header from "../../../components/common/Header";
 import Footer from "../../../components/common/Footer";
 
 import {
-  FaGraduationCap,
-  FaUniversalAccess,
-  FaUserGraduate,
-  FaPenToSquare,
-  FaBookOpen,
-  FaSquareRootVariable,
-  FaFlaskVial,
-  FaLandmark,
-  FaEarthAmericas,
-  FaHandSparkles,
-  FaChevronRight,
-  FaXmark,
-  FaRegCopyright,
-  FaEyeSlash,
-  FaFile
+  FaFile,
 } from 'react-icons/fa6';
+
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
 import VerticalCarousel from "../../../components/experiences/visual/VerticalCarousel";
 import { speak } from "../../../services/utils";
 import useLongClick from "../../../hooks/useLongClick";
 import { AuthContext } from "../../../context/AuthProvider";
-
-
+import api from "../../../services/api";
+import Spinner from "../../../components/common/Spinner";
 
 export default function Materia() {
-
-  const [materiaLibras, setMateriaLibras] = useState(null);
-
-  const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
-
+  const { disciplinaId } = useParams();
   const navigate = useNavigate();
 
-  const materias = [
-  {
-    id: 'portugues',
-    nome: 'Ortografia e acentuação',
-    descricao: 'Aprenda as regras de ortografia e o uso correto dos acentos gráficos.',
-    onClick: () => navigate('/materias/portugues/conteudos/ortografia')
-  },
-  {
-    id: 'matematica',
-    nome: 'Interpretação de texto',
-    descricao: 'Dicas para compreender e analisar textos de diferentes gêneros.',
-    onClick: () => navigate('/materias/portugues/conteudos/ortografia')
-  },
-];
-
   const { setHeaderOptions } = useOutletContext();
+  const { themeOptions } = useContext(AuthContext);
+
+  const [conteudos, setConteudos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [disciplina, setDisciplina] = useState();
+
+  useEffect(() => {
+    fetchConteudos();
+  }, [disciplinaId]);
+
+  const fetchConteudos = async () => {
+    if (!disciplinaId) return;
+    setLoading(true);
+    try {
+      const [conteudosRes, disciplinaRes] = await Promise.all([
+        api.get(`/student/disciplinas/${disciplinaId}/conteudos`),
+        api.get(`/student/disciplinas/${disciplinaId}`)
+      ]);
+
+      setDisciplina(disciplinaRes.data.data);
+
+      const mapped = conteudosRes.data.data.map((conteudo) => ({
+        id: conteudo.id,
+        nome: conteudo.title,
+        descricao: conteudo.description,
+        onClick: () => navigate(`/materias/${disciplinaId}/conteudos/${conteudo.id}`)
+      }));
+      setConteudos(mapped);
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao carregar conteúdos');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     setHeaderOptions({
       custom: true,
-      icon: <FaFile/>,
+      icon: <FaFile />,
       color: '#465fff',
       title: 'Conteúdos',
-      desc: 'Português'
+      desc: disciplina?.name,
     });
-  }, [])
+  }, [disciplina]);
 
-  const handleSwipe = (index) => {
-    speak(materias[index].nome + '. ' + materias[index].descricao);
-  }
+  const handleSwipe = (index: number) => {
+    if (!conteudos[index]) return;
+    speak(conteudos[index].nome + '. ' + conteudos[index]?.descricao);
+  };
 
   useLongClick(() => {
-    speak('Você está vendo conteúdos de português');
-    // console.log("Clique longo detectado!");
+    speak(`Você está vendo conteúdos de ${disciplina.name}`);
   }, { ms: 800 });
-
-  const { themeOptions } = useContext(AuthContext);
 
   const getTextClass = () => {
     let classes = "";
@@ -86,13 +87,22 @@ export default function Materia() {
   return (
     <div className="flex flex-col h-full w-full">
       <main className="flex-1 flex flex-col items-center px-3 pt-4 pb-3">
-
         <section className="w-full flex-1 flex flex-col">
           <div className="flex flex-row items-center justify-between mb-4">
-            <h3 className={`text-base font-bold text-[#233366] dark:text-white ${getTextClass()}`}>Conteúdos</h3>
+            <h3 className={`text-base font-bold text-[#233366] dark:text-white ${getTextClass()}`}>
+              Conteúdos
+            </h3>
           </div>
           <div className="flex flex-col w-full flex-1 gap-3">
-            <VerticalCarousel canGoBack={true} items={materias} onSwipe={handleSwipe}/>
+            {loading ? (
+              <Spinner />
+            ) : conteudos.length > 0 ? (
+              <VerticalCarousel canGoBack={true} items={conteudos} onSwipe={handleSwipe} />
+            ) : (
+              <div className="text-center text-sm text-gray-500 dark:text-white">
+                Nenhum conteúdo disponível.
+              </div>
+            )}
           </div>
         </section>
       </main>

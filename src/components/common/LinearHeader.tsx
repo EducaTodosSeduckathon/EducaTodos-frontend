@@ -13,9 +13,9 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
 
   const navigate = useNavigate()
 
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
 
-    const [modalSugestoes, setModalSugestoes] = useState(false);
+  const [modalSugestoes, setModalSugestoes] = useState(false);
   
 
   return (
@@ -45,8 +45,8 @@ function LinearHeader({ custom = false, back = true, icon, color, title, desc, a
                 className="w-16 h-16 rounded-full border-4 border-[#E4EDFB] object-cover mb-2"
               />
               <div className='flex-1'>
-                <h2 className="text-lg font-bold text-[#233366]">Olá, João Pedro!</h2>
-                <span className="text-xs text-[#6D7B97] mt-1">Aluno do 7º ano • Turma B</span>
+                <h2 className="text-lg font-bold text-[#233366]">Olá, {user?.name}!</h2>
+                <span className="text-xs text-[#6D7B97] mt-1">{user?.student_info?.turma?.name}</span>
               </div>
             </div>
             <div className="flex items-center gap-2 bg-[#E4EDFB] rounded-lg px-3 py-1">

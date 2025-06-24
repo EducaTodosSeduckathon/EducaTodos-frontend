@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext, useParams } from "react-router";
 import {
   FaChevronRight,
   FaFileLines,
@@ -42,13 +42,15 @@ export default function Materia() {
   const { themeOptions } = useContext(AuthContext);
   const { theme } = useTheme();
 
+  const { disciplinaId, conteudo } = useParams();
+
   useEffect(() => {
     setHeaderOptions({
       custom: true,
       icon: <FaFile />,
       color: "#465fff",
       title: "Conteúdos",
-      desc: "Ortografia",
+      desc: '',
     });
   }, []);
 
@@ -79,7 +81,7 @@ export default function Materia() {
                 key={id}
                 title={nome}
                 subtitle={descricao}
-                onClick={() => navigate(`/materias/portugues/conteudos/ortografia/${id}`)}
+                onClick={() => navigate(`/materias/${disciplinaId}/conteudos/${conteudo}/${id}`)}
                 color={cor}
                 icon={icone}
                 theme={theme}

@@ -12,11 +12,11 @@ export default function IntelectualRoutes() {
     <Routes>
       <Route path="/*" element={<ExperienceLayout />}>
         <Route path="" element={<IntelectualHome />} />
-        <Route path="materias/:materia/conteudos" element={<IntelectualMateria />} />
-        <Route path="materias/:materia/conteudos/:conteudo" element={<IntelectualContentMenu />} />
-        <Route path="materias/:materia/conteudos/:conteudo/resumo" element={<IntelectualResume />} />
-        <Route path="materias/:materia/conteudos/:conteudo/extras" element={<IntelectualExtras />} />
-        <Route path="materias/:materia/conteudos/:conteudo/questoes" element={<IntelectualQuestions />} />
+        <Route path="materias/:disciplinaId/conteudos" element={<IntelectualMateria />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo" element={<IntelectualContentMenu />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/resumo" element={<IntelectualResume />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/extras" element={<IntelectualExtras />} />
+        <Route path="materias/:disciplinaId/conteudos/:conteudo/questoes" element={<IntelectualQuestions />} />
       </Route>
 
     </Routes>

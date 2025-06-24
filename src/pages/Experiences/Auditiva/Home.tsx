@@ -23,39 +23,22 @@ import { useNavigate, useOutletContext } from "react-router";
 
 const materias = [
   {
-    id: 'portugues',
-    nome: 'Português',
-    descricao: 'Leitura, gramática e redação',
+    id: 1,
+    nome: 'Língua Portuguesa',
     cor: '#2F80ED',
     icone: <FaBookOpen />,
   },
   {
-    id: 'matematica',
+    id: 2,
     nome: 'Matemática',
-    descricao: 'Números, operações e lógica',
     cor: '#FFB946',
     icone: <FaSquareRootVariable />,
   },
   {
-    id: 'ciencias',
-    nome: 'Ciências',
-    descricao: 'Natureza, experiências e descobertas',
-    cor: '#21C87A',
-    icone: <FaFlaskVial />,
-  },
-  {
-    id: 'historia',
+    id: 3,
     nome: 'História',
-    descricao: 'Fatos, civilizações e culturas',
     cor: '#ED5555',
     icone: <FaLandmark />,
-  },
-  {
-    id: 'geografia',
-    nome: 'Geografia',
-    descricao: 'Territórios, clima e mapas',
-    cor: '#8B5CF6',
-    icone: <FaEarthAmericas />,
   },
 ];
 
@@ -64,7 +47,6 @@ export default function Home() {
   const [materiaLibras, setMateriaLibras] = useState(null);
 
   const abrirLibras = (nome) => setMateriaLibras(nome);
-  const fecharLibras = () => setMateriaLibras(null);
 
   const { setHeaderOptions } = useOutletContext();
 
@@ -85,14 +67,13 @@ export default function Home() {
             <h3 className="text-base font-bold text-[#233366]">Matérias</h3>
           </div>
           <div className="flex flex-col gap-3">
-          {materias.map(({ id, nome, descricao, cor, icone }) => (
-              <div onClick={() => navigate('/materias/portugues/conteudos')} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
+          {materias.map(({ id, nome, cor, icone }) => (
+              <div onClick={() => navigate(`/materias/${id}/conteudos`)} key={id} className="bg-white rounded-2xl p-4 shadow-sm flex items-center gap-3">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full text-xl shrink-0" style={{ backgroundColor: `${cor}1A`, color: cor }}>
                   {icone}
                 </div>
                 <div className="flex flex-col flex-1">
                   <span className="font-semibold text-[#253858] text-base">{nome}</span>
-                  <span className="text-xs text-[#7B8794]">{descricao}</span>
                 </div>
                 <button
                   className="ml-3 flex items-center gap-1 px-2 py-1 rounded-md text-[#21C87A] bg-[#21C87A]/10 text-xs font-semibold active:bg-[#21C87A]/20"
