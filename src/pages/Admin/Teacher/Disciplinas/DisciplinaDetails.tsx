@@ -63,11 +63,11 @@ export default function DisciplinaDetails() {
   }, [disciplinaId]);
 
   const conteudosAtivos = conteudos.filter(
-    (c) => new Date(c.data_termino) >= hoje
+    (c) => new Date(c.end_date) >= hoje
   );
 
   const conteudosFinalizados = conteudos.filter(
-    (c) => new Date(c.data_termino) < hoje
+    (c) => new Date(c.end_date) < hoje
   );
 
   const renderTable = (lista: Conteudo[]) => (
@@ -100,20 +100,20 @@ export default function DisciplinaDetails() {
           lista.map((conteudo) => (
             <TableRow key={conteudo.id}>
               <TableCell className="px-5 py-4 text-start font-medium">
-                <Link to={`/teacher/disciplinas/${disciplinaId}/conteudos/${conteudo.id}`}>
-                  {conteudo.titulo}
+                <Link to={`/admin/disciplinas/${disciplinaId}/conteudos/${conteudo.id}`}>
+                  {conteudo.title}
                 </Link>
               </TableCell>
               <TableCell className="px-5 py-4 text-start text-gray-500">
-                {conteudo.descricao}
+                {conteudo.description}
               </TableCell>
               <TableCell className="px-5 py-4 text-start text-gray-500">
-                {new Date(conteudo.data_termino).toLocaleDateString("pt-BR")}
+                {new Date(conteudo.end_date).toLocaleDateString("pt-BR")}
               </TableCell>
               <TableCell className="px-5 py-4 text-start">
                 <div className="flex gap-3">
                   <Link
-                    to={`/teacher/disciplinas/${disciplinaId}/conteudos/${conteudo.id}`}
+                    to={`/admin/disciplinas/${disciplinaId}/conteudos/${conteudo.id}`}
                     className="text-blue-600 hover:text-blue-800"
                     title="Editar"
                   >
@@ -172,7 +172,7 @@ export default function DisciplinaDetails() {
             Conteúdos da Disciplina
           </h2>
           <Link
-            to={`/teacher/disciplinas/${disciplinaId}/conteudos/novo`}
+            to={`/admin/disciplinas/${disciplinaId}/conteudos/cadastrar`}
             className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md"
           >
             + Novo Conteúdo

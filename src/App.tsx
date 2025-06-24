@@ -62,7 +62,7 @@ export default function App() {
           }
           
           {/* Fallback Route */}
-          <Route path="*" element={<Navigate to="" />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </>

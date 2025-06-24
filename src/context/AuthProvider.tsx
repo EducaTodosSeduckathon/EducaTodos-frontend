@@ -21,6 +21,7 @@ type IAuthContext = {
   setUser: (newState: any) => void;
   login: (email: string, password: string, remember?: boolean) => void;
   logout: () => void;
+  setToken: (token: string) => void;
 }
 
 const initialValue = {
@@ -32,6 +33,7 @@ const initialValue = {
   themeOptions: null,
   setThemeOptions: () => {},
   setUser: () => {},
+  setToken: () => {},
   login: () => {},
   logout: () => {}
 }
@@ -68,7 +70,7 @@ export const AuthProvider = ({ children }: Props) => {
     loadUser();
   }, [token]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, pre_auth: boolean = false) => {
     
     try{
       const { data } = await api.post('/auth/login', {
@@ -78,10 +80,17 @@ export const AuthProvider = ({ children }: Props) => {
       })
 
       toast('Logado com sucesso', { type: 'success' })
-      setToken(data.data.token);
+
       setUser(data.data.user);
-      setAuthenticated(true);
-      window.location.href = '/';
+      if(!pre_auth){
+        setToken(data.data.token);
+        setAuthenticated(true);
+        window.location.href = '/';
+      }
+
+      return {
+        token: data.data.token
+      }
 
 
     }catch(e) {
@@ -101,7 +110,7 @@ export const AuthProvider = ({ children }: Props) => {
   };
 
   return (
-    <AuthContext.Provider value={{ role, setRole, authenticated, setAuthenticated, themeOptions, setThemeOptions, accessibilityType, setAccessibilityType, user, setUser, login, logout }}>
+    <AuthContext.Provider value={{ role, setRole, authenticated, setToken, setAuthenticated, themeOptions, setThemeOptions, accessibilityType, setAccessibilityType, user, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

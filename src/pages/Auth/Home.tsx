@@ -31,15 +31,26 @@ export default function Home() {
     setStep(STEPS.login);
   }
 
-  const { role, setRole, login, setAccessibilityType } = useContext(AuthContext);
+  const { role, setRole, login, accessibilityType, setAccessibilityType, setToken } = useContext(AuthContext);
 
-  const handleLogin = (data: any) => {
+  const [ accessToken, setAccessToken ] = useState();
+
+  const handleLogin = async (data: any) => {
     if(role == 'student'){
+      const res = await login(data.email, data.password, true)
+      setAccessToken(res?.token);
       setStep(STEPS.choice)
     }else{
       login(data.email, data.password)
     }
   }
+
+  useEffect(() => {
+    if(accessibilityType){
+      setToken(accessToken);
+      window.location.href = '/';
+    }
+  }, [accessibilityType])
 
   return (
     <div className="bg-[#F6F8FB] min-h-[700px]">
@@ -52,7 +63,7 @@ export default function Home() {
           <LoginForm role={role} onSelectRole={handleSelectRole} onSuccess={handleLogin} />
         }
         {step == STEPS.choice &&
-          <AccessibilityChoice onChoice={(type) => (setAccessibilityType(type), login())} />
+          <AccessibilityChoice onChoice={(type) => (setAccessibilityType(type))} />
         }
       </div>
       <Footer />
