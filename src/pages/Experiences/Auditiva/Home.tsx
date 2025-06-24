@@ -110,67 +110,13 @@ export default function Home() {
 
         <section className="flex flex-col items-center mt-4">
           <span className="text-xs text-[#4F5B69] mb-1 text-center">
-            Toque no botão
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#21C87A]/10 rounded-md text-[#21C87A] font-bold ml-1">
-              <FaHandSparkles /> Libras
-            </span>
-            para assistir à explicação em Língua Brasileira de Sinais.
+            Toque no botão lateral para assistir à explicação em Língua Brasileira de Sinais.
           </span>
         </section>
       </main>
 
       <Footer />
-
-      {materiaLibras && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center" onClick={fecharLibras}>
-          <div className="bg-white rounded-2xl p-6 w-[90vw] max-w-xs flex flex-col items-center shadow-lg relative" onClick={(e) => e.stopPropagation()}>
-            <button className="absolute top-3 right-3 text-[#A0AEC0] text-xl hover:text-[#ED5555] transition" onClick={fecharLibras}>
-              <FaXmark />
-            </button>
-            <div className="flex flex-col items-center mb-3">
-              <FaHandSparkles className="text-3xl text-[#21C87A] mb-2" />
-              <span className="font-semibold text-[#253858] text-lg mb-1">Explicação em Libras</span>
-              <span className="text-xs text-[#7B8794] mb-2">{materiaLibras}</span>
-            </div>
-            <div className="w-full h-44 rounded-xl bg-[#EAF1FB] flex items-center justify-center overflow-hidden mb-2">
-              <img
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/31a4c7ee91-deb763179a2770866fa5.png"
-                alt="pessoa gesticulando em libras"
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <span className="text-xs text-[#4F5B69] text-center">
-              Assista à explicação desse conteúdo em Libras para melhor compreensão.
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-function SubjectButton({ icon, bgColor, title, subtitle, chevronColor }: any) {
-  return (
-    <button
-      className={`flex items-center gap-3 ${bgColor} rounded-xl py-3 px-4 focus:ring-2 transition cursor-pointer w-full`}
-    >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-white">{icon}</div>
-      <div className="flex flex-col flex-1 items-start">
-        <span className="text-base font-semibold text-[#233366]">{title}</span>
-        <span className="text-xs text-[#6D7B97]">{subtitle}</span>
-      </div>
-      <FaChevronRight className={`text-[${chevronColor}]`} />
-    </button>
-  );
-}
-
-function LoginOption({ icon, label, bg }: any) {
-  return (
-    <button
-      className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 ${bg} rounded-xl focus:ring-2 transition cursor-pointer`}
-    >
-      <div className="text-lg">{icon}</div>
-      <span className="text-xs font-medium text-[#233366]">{label}</span>
-    </button>
-  );
-}

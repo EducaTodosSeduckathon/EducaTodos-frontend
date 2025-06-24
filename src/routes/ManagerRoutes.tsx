@@ -17,6 +17,8 @@ import Denuncias from "../pages/Admin/Manager/Feedbacks/Denuncias";
 import DenunciasAnonimas from "../pages/Admin/Manager/Feedbacks/DenunciasAnonimas";
 import AvisosHorarios from "../pages/Admin/Manager/Horarios/Horarios";
 import Responsaveis from "../pages/Admin/Manager/Responsaveis/Responsaveis";
+import Turmas from "../pages/Admin/Manager/Turmas/Turmas";
+import EditTurma from "../pages/Admin/Manager/Turmas/EditTurma";
 
 export default function ManagerRoutes() {
   return (
@@ -25,18 +27,17 @@ export default function ManagerRoutes() {
       <Route path="admin" element={<AppLayout />}>
       {/* <Route index path="" element={<Home />} /> */}
 
+        <Route path="/admin/turmas" element={<Turmas />} />
+        <Route path="/admin/turmas/:id" element={<EditTurma />} />
+
         <Route path="/admin/disciplinas" element={<Disciplinas />} />
         <Route path="/admin/disciplinas/:id" element={<EditDisciplina />} />
+
         <Route path="/admin/professores" element={<Professores />} />
         <Route path="/admin/professores/:id" element={<EditProfessor />} />
+
         <Route path="/admin/alunos" element={<Alunos />} />
         <Route path="/admin/alunos/:id" element={<EditAluno />} />
-        <Route path="/admin/responsaveis" element={<Responsaveis />} />
-        <Route path="/admin/responsaveis/:id" element={<EditAluno />} />
-        <Route path="/admin/disciplinas/:disciplinaId" element={<DisciplinaDetails />} />
-        <Route path="/admin/disciplinas/:disciplinaId/conteudo/" element={<EditConteudo />} />
-        <Route path="/admin/disciplinas/:disciplinaId/conteudo/:id" element={<EditConteudo />} />
-
 
         <Route path="/admin/horarios" element={<AvisosHorarios />} />
         <Route path="/admin/feedbacks" element={<Feedbacks />} />

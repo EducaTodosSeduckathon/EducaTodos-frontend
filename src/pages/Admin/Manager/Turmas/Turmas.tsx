@@ -13,33 +13,23 @@ import { Link } from "react-router";
 import api from "../../../../services/api";
 import Spinner from "../../../../components/common/Spinner";
 
-interface Disciplina {
+interface Turma {
   id: number;
   nome: string;
-  professor: string;
-  turma: string;
+  ano: string;
+  quantidadeDisciplinas: number;
 }
 
-export default function Disciplinas() {
-  const [disciplinas, setDisciplinas] = useState<Disciplina[]>([]);
+export default function Turmas() {
+  const [turmas, setTurmas] = useState<Turma[]>([]);
   const [loading, setLoading] = useState(false);
-  const [turmas, setTurmas] = useState<string[]>([]);
-  const [turmaSelecionada, setTurmaSelecionada] = useState<string>("");
 
-  const fetchDisciplinas = async () => {
+  const fetchTurmas = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get("/manager/disciplinas");
-      const lista: Disciplina[] = data.data.disciplinas;
-      console.log(lista)
-
-      setDisciplinas(lista);
-
-      const turmasUnicas = Array.from(
-        new Set(lista.map((d) => d.turma.name))
-      ).sort();
-      setTurmas(turmasUnicas);
-      setTurmaSelecionada(turmasUnicas[0] || "");
+      const { data } = await api.get("/manager/turmas");
+      const lista: Turma[] = data.data.turmas;
+      setTurmas(lista);
     } catch (e) {
       console.log(e);
     } finally {
@@ -48,45 +38,22 @@ export default function Disciplinas() {
   };
 
   useEffect(() => {
-    fetchDisciplinas();
+    fetchTurmas();
   }, []);
-
-  const disciplinasFiltradas = disciplinas.filter(
-    (d) => d.turma.name === turmaSelecionada
-  );
 
   return (
     <>
-      <PageBreadcrumb pageTitle="Disciplinas" />
+      <PageBreadcrumb pageTitle="Turmas" />
 
       {/* Botão Cadastrar */}
       <div className="flex justify-end mb-4">
         <Link
-          to="/admin/disciplinas/cadastrar"
+          to="/admin/turmas/cadastrar"
           className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition"
         >
           <FaPlus className="text-sm" />
-          Cadastrar Disciplina
+          Cadastrar Turma
         </Link>
-      </div>
-
-      {/* Tabs de Turmas */}
-      <div className="mb-4 border-b border-gray-200 dark:border-white/[0.05]">
-        <nav className="-mb-px flex gap-4">
-          {turmas.map((turma) => (
-            <button
-              key={turma}
-              onClick={() => setTurmaSelecionada(turma)}
-              className={`px-3 py-2 text-sm font-medium ${
-                turmaSelecionada === turma
-                  ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400"
-                  : "text-gray-500 hover:text-blue-600"
-              }`}
-            >
-              {turma}
-            </button>
-          ))}
-        </nav>
       </div>
 
       {loading ? (
@@ -98,10 +65,7 @@ export default function Disciplinas() {
               <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                 <TableRow>
                   <TableCell isHeader className="px-5 py-3 font-medium text-start">
-                    Disciplina
-                  </TableCell>
-                  <TableCell isHeader className="px-5 py-3 font-medium text-start">
-                    Professor
+                    Turma
                   </TableCell>
                   <TableCell isHeader className="px-5 py-3 font-medium text-start">
                     Ações
@@ -110,24 +74,21 @@ export default function Disciplinas() {
               </TableHeader>
 
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                {disciplinasFiltradas.length > 0 ? (
-                  disciplinasFiltradas.map((disciplina) => (
-                    <TableRow key={disciplina.id}>
+                {turmas.length > 0 ? (
+                  turmas.map((turma) => (
+                    <TableRow key={turma.id}>
                       <TableCell className="px-5 py-4 text-start">
                         <Link
-                          to={`/admin/disciplinas/${disciplina.id}`}
+                          to={`/admin/turmas/${turma.id}`}
                           className="font-medium text-gray-800 dark:text-white"
                         >
-                          {disciplina.name}
+                          {turma.name}
                         </Link>
-                      </TableCell>
-                      <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
-                        {disciplina.teacher.name}
                       </TableCell>
                       <TableCell className="px-5 py-4 text-start">
                         <div className="flex gap-3">
                           <Link
-                            to={`/admin/disciplinas/${disciplina.id}`}
+                            to={`/admin/turmas/${turma.id}`}
                             className="text-blue-600 hover:text-blue-800"
                             title="Editar"
                           >
@@ -139,8 +100,8 @@ export default function Disciplinas() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={3} className="px-5 py-4 text-center">
-                      Nenhuma disciplina encontrada para esta turma.
+                    <TableCell colSpan={4} className="px-5 py-4 text-center">
+                      Nenhuma turma encontrada.
                     </TableCell>
                   </TableRow>
                 )}

@@ -2,6 +2,7 @@ import React, { useState, createContext, useEffect } from 'react';
 import api from '../services/api';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useTheme } from './ThemeContext';
+import { toast } from 'react-toastify';
 
 type Props = {
   children?: React.ReactNode;
@@ -56,10 +57,10 @@ export const AuthProvider = ({ children }: Props) => {
     const loadUser = async () => {
       if(token){
         try {
-          const { data } = await api.get('/convitin/v1/me');
-          setUser(data);
+          const { data } = await api.get('/auth/me');
+          setUser(data.data);
         } catch (err) {
-          console.error('Failed to load user', err);
+          console.log('Failed to load user', err.response);
         }
       }
       
@@ -67,19 +68,26 @@ export const AuthProvider = ({ children }: Props) => {
     loadUser();
   }, [token]);
 
-  const login = async (email: string, password: string, remember = false) => {
-    setAuthenticated(true);
-    setToken('fdsfgsdg');
-    window.location.href = '/';
-    return;
-    const { data } = await api.post('jwt-auth/v1/token', {
-      username: email,
-      password
-    });
+  const login = async (email: string, password: string) => {
+    
+    try{
+      const { data } = await api.post('/auth/login', {
+        role,
+        email,
+        password
+      })
 
-    setToken(data.data.token);
-    return data;
-    // setUser(data.user);
+      toast('Logado com sucesso', { type: 'success' })
+      setToken(data.data.token);
+      setUser(data.data.user);
+      setAuthenticated(true);
+      window.location.href = '/';
+
+
+    }catch(e) {
+      toast(e.response.data.message, { type: 'error' })
+    }
+
   };
 
   const { setTheme } = useTheme();

@@ -2,7 +2,7 @@ import axios from 'axios';
 const getAccessToken = () => JSON.parse(localStorage.getItem('access_token'));
 
 const api = axios.create({
-  baseURL: 'https://convitin.com.br/wp-json',
+  baseURL: 'http://localhost:3000/api',
   headers: {
     'Content-Type': 'application/json'
   }

@@ -43,7 +43,7 @@ export default function VisualAdjustments({ className = "" }: Props) {
           onClick={() =>
             setThemeOptions((prev) => ({
               ...prev,
-              simpleMode: !prev.simpleMode,
+              simpleMode: !prev?.simpleMode,
             }))
           }
           className="bg-yellow-100 rounded-xl p-3 flex flex-col items-center hover:bg-yellow-200"

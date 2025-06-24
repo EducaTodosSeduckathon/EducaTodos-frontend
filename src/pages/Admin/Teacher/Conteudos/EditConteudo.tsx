@@ -4,6 +4,7 @@ import Resumo from "./tabs/Resumo";
 import Extras from "./tabs/Extras";
 import Questoes from "./tabs/Questoes";
 import Respostas from "./tabs/Respostas";
+import { useParams } from "react-router";
 
 const tabs = ["Resumo", "Materiais Complementares", "Questões", "Respostas"] as const;
 

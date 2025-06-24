@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FaEye, FaTrash } from "react-icons/fa";
 import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
 import {
   Table,
@@ -7,123 +8,140 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../components/ui/table";
-
-import { FaTrash, FaEye } from "react-icons/fa";
 import { Modal } from "../../../../components/ui/modal";
+import Spinner from "../../../../components/common/Spinner";
+import api from "../../../../services/api";
 
-interface Denuncia {
+interface Feedback {
   id: number;
-  denunciante: string;
-  descricao: string;
-  data: string;
+  student_name: string;
+  text: string;
+  date: string;
 }
 
-const denuncias: Denuncia[] = [
-  {
-    id: 1,
-    denunciante: "João Silva",
-    descricao: "O conteúdo da disciplina contém informações ofensivas.",
-    data: "20/06/2025",
-  },
-  {
-    id: 2,
-    denunciante: "Maria Souza",
-    descricao:
-      "O professor não está disponibilizando materiais acessíveis para alunos com deficiência visual.",
-    data: "18/06/2025",
-  },
-];
-
 export default function Denuncias() {
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [denunciaSelecionada, setDenunciaSelecionada] = useState<Denuncia | null>(null);
+  const [feedbackSelecionado, setFeedbackSelecionado] = useState<Feedback | null>(null);
 
-  const openModal = (denuncia: Denuncia) => {
-    setDenunciaSelecionada(denuncia);
+  const fetchFeedbacks = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.get("/manager/feedbacks?type=denuncia");
+      setFeedbacks(data.data.feedbacks);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao carregar os denúncias.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openModal = (feedback: Feedback) => {
+    setFeedbackSelecionado(feedback);
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    setDenunciaSelecionada(null);
+    setFeedbackSelecionado(null);
   };
+
+  const removerFeedback = async (id: number) => {
+    if (!confirm("Deseja realmente excluir esta denúncia?")) return;
+    try {
+      await api.delete(`/manager/feedbacks/${id}`);
+      setFeedbacks(feedbacks.filter((fb) => fb.id !== id));
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao excluir o denúncia.");
+    }
+  };
+
+  useEffect(() => {
+    fetchFeedbacks();
+  }, []);
 
   return (
     <>
       <PageBreadcrumb pageTitle="Denúncias" />
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-        <div className="max-w-full overflow-x-auto">
-          <Table>
-            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-              <TableRow>
-                <TableCell isHeader className="px-5 py-3 font-medium text-start">
-                  Denunciante
-                </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-start">
-                  Descrição
-                </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-start">
-                  Data
-                </TableCell>
-                <TableCell isHeader className="px-5 py-3 font-medium text-start">
-                  Ações
-                </TableCell>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {denuncias.map((den) => (
-                <TableRow key={den.id}>
-                  <TableCell className="px-5 py-4 text-start">
-                    <span className="font-medium text-gray-800 dark:text-white">
-                      {den.denunciante}
-                    </span>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+          <div className="max-w-full overflow-x-auto">
+            <Table>
+              <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+                <TableRow>
+                  <TableCell isHeader className="px-5 py-3 font-medium text-start">
+                    Aluno
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
-                    {den.descricao.length > 60
-                      ? den.descricao.substring(0, 60) + "..."
-                      : den.descricao}
+                  <TableCell isHeader className="px-5 py-3 font-medium text-start">
+                    Denúncia
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
-                    {den.data}
+                  <TableCell isHeader className="px-5 py-3 font-medium text-start">
+                    Data
                   </TableCell>
-                  <TableCell className="px-5 py-4 text-start">
-                    <div className="flex gap-3">
-                      <button
-                        className="text-blue-600 hover:text-blue-800"
-                        title="Visualizar"
-                        onClick={() => openModal(den)}
-                      >
-                        <FaEye />
-                      </button>
-                      <button
-                        className="text-red-600 hover:text-red-800"
-                        title="Excluir"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
+                  <TableCell isHeader className="px-5 py-3 font-medium text-start">
+                    Ações
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                {feedbacks.map((fb) => (
+                  <TableRow key={fb.id}>
+                    <TableCell className="px-5 py-4 text-start">
+                      <span className="font-medium text-gray-800 dark:text-white">
+                        {fb.student_name}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
+                      {fb.text.length > 60 ? fb.text.substring(0, 60) + "..." : fb.text}
+                    </TableCell>
+                    <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
+                      {new Date(fb.date).toLocaleDateString("pt-BR")}
+                    </TableCell>
+                    <TableCell className="px-5 py-4 text-start">
+                      <div className="flex gap-3">
+                        <button
+                          className="text-blue-600 hover:text-blue-800"
+                          title="Visualizar"
+                          onClick={() => openModal(fb)}
+                        >
+                          <FaEye />
+                        </button>
+                        <button
+                          className="text-red-600 hover:text-red-800"
+                          title="Excluir"
+                          onClick={() => removerFeedback(fb.id)}
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Modal de Visualização */}
       <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
         <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-8">
           <div className="px-2 pr-10">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Denúncia de {denunciaSelecionada?.denunciante}
+              Feedback de {feedbackSelecionado?.student_name}
             </h4>
             <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-              Data: {denunciaSelecionada?.data}
+              Data: {new Date(feedbackSelecionado?.date || "").toLocaleDateString("pt-BR")}
             </p>
             <div className="bg-gray-100 dark:bg-white/[0.05] rounded-lg p-4 text-gray-700 dark:text-gray-300">
-              {denunciaSelecionada?.descricao}
+              {feedbackSelecionado?.text}
             </div>
           </div>
 

@@ -17,7 +17,6 @@ export default function TeacherRoutes() {
 
         <Route path="/admin/disciplinas" element={<Disciplinas />} />
         <Route path="/admin/disciplinas/:disciplinaId" element={<DisciplinaDetails />} />
-        <Route path="/admin/disciplinas/:disciplinaId/conteudo/" element={<EditConteudo />} />
         <Route path="/admin/disciplinas/:disciplinaId/conteudo/:id" element={<EditConteudo />} />
 
 

@@ -15,7 +15,7 @@ export default function UserDropdown() {
     setIsOpen(false);
   }
 
-  const { logout } = useContext(AuthContext);
+  const { logout , user } = useContext(AuthContext);
 
   return (
     <div className="relative">
@@ -27,7 +27,7 @@ export default function UserDropdown() {
           <img src="/images/user/owner.jpg" alt="User" />
         </span> */}
 
-        <span className="block mr-1 font-medium text-theme-sm">Pedro Silva</span>
+        <span className="block mr-1 font-medium text-theme-sm">{user?.name}</span>
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""

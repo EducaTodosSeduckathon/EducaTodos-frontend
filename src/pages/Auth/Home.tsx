@@ -33,11 +33,11 @@ export default function Home() {
 
   const { role, setRole, login, setAccessibilityType } = useContext(AuthContext);
 
-  const handleLogin = () => {
+  const handleLogin = (data: any) => {
     if(role == 'student'){
       setStep(STEPS.choice)
     }else{
-      login()
+      login(data.email, data.password)
     }
   }
 
@@ -49,7 +49,7 @@ export default function Home() {
           <RoleSelection onSelect={handleSelectRole} />
         }
         {step == STEPS.login &&
-          <LoginForm role={role} onSelectRole={handleSelectRole} onSuccess={() => handleLogin()} />
+          <LoginForm role={role} onSelectRole={handleSelectRole} onSuccess={handleLogin} />
         }
         {step == STEPS.choice &&
           <AccessibilityChoice onChoice={(type) => (setAccessibilityType(type), login())} />

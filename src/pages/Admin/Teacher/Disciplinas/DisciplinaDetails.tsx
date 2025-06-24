@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageBreadcrumb from "../../../../components/common/PageBreadCrumb";
 import Badge from "../../../../components/ui/badge/Badge";
@@ -9,62 +9,68 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../components/ui/table";
-
 import { FaEdit, FaTrash } from "react-icons/fa";
+import Spinner from "../../../../components/common/Spinner";
+import api from "../../../../services/api";
 
-// Simula dados da disciplina e dos conteúdos
-const disciplina = {
-  id: 1,
-  nome: "Matemática",
-  periodo: "1º Semestre",
-  alunos: 32,
-  status: "Ativa" as "Ativa" | "Encerrada" | "Planejamento",
-};
+interface Conteudo {
+  id: number;
+  titulo: string;
+  descricao: string;
+  data_termino: string;
+}
 
-const conteudos = [
-  {
-    id: 1,
-    titulo: "Introdução aos Números Reais",
-    descricao: "Apresentação dos conceitos básicos de números reais.",
-    dataTermino: "2025-07-15",
-  },
-  {
-    id: 2,
-    titulo: "Equações de 1º Grau",
-    descricao: "Resolução de problemas usando equações de primeiro grau.",
-    dataTermino: "2025-07-30",
-  },
-  {
-    id: 3,
-    titulo: "Funções",
-    descricao: "Conceitos e aplicações de funções no cotidiano.",
-    dataTermino: "2025-08-10",
-  },
-  {
-    id: 4,
-    titulo: "Polinômios",
-    descricao: "Conteúdo finalizado sobre polinômios.",
-    dataTermino: "2023-12-01",
-  },
-];
+interface Disciplina {
+  id: number;
+  name: string;
+  is_active: boolean;
+  turma: {
+    id: number;
+    name: string;
+  };
+}
 
 export default function DisciplinaDetails() {
   const { disciplinaId } = useParams();
+  const [disciplina, setDisciplina] = useState<Disciplina | null>(null);
+  const [conteudos, setConteudos] = useState<Conteudo[]>([]);
   const [activeTab, setActiveTab] = useState<"ativos" | "finalizados">("ativos");
+  const [loading, setLoading] = useState(false);
 
   const hoje = new Date();
 
-  // Conteúdos ativos: dataTermino no futuro ou hoje
+  const fetchDados = async () => {
+    setLoading(true);
+    try {
+      
+      const [disciplinaRes, conteudosRes] = await Promise.all([
+        api.get(`/teacher/disciplinas/${disciplinaId}`),
+        api.get(`/teacher/disciplinas/${disciplinaId}/conteudos`),
+      ]);
+
+      setDisciplina(disciplinaRes.data.data);
+      setConteudos(conteudosRes.data.data.conteudos);
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao carregar dados da disciplina.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDados();
+  }, [disciplinaId]);
+
   const conteudosAtivos = conteudos.filter(
-    (c) => new Date(c.dataTermino) >= hoje
+    (c) => new Date(c.data_termino) >= hoje
   );
 
-  // Conteúdos finalizados: dataTermino no passado
   const conteudosFinalizados = conteudos.filter(
-    (c) => new Date(c.dataTermino) < hoje
+    (c) => new Date(c.data_termino) < hoje
   );
 
-  const renderTable = (lista: typeof conteudos) => (
+  const renderTable = (lista: Conteudo[]) => (
     <Table>
       <TableHeader>
         <TableRow>
@@ -84,73 +90,76 @@ export default function DisciplinaDetails() {
       </TableHeader>
 
       <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-        {lista.map((conteudo) => (
-          <TableRow key={conteudo.id}>
-            <TableCell className="px-5 py-4 text-start font-medium">
-              <Link to={`/admin/disciplinas/${disciplina.id}/conteudo/s`}>
-                {conteudo.titulo}
-              </Link>
-            </TableCell>
-            <TableCell className="px-5 py-4 text-start text-gray-500">
-              {conteudo.descricao}
-            </TableCell>
-            <TableCell className="px-5 py-4 text-start text-gray-500">
-              {new Date(conteudo.dataTermino).toLocaleDateString("pt-BR")}
-            </TableCell>
-            <TableCell className="px-5 py-4 text-start">
-              <div className="flex gap-3">
-                <Link
-                  to={`/admin/disciplinas/${disciplina.id}/conteudo/s`}
-                  className="text-blue-600 hover:text-blue-800"
-                  title="Editar"
-                >
-                  <FaEdit />
-                </Link>
-                <button
-                  className="text-red-600 hover:text-red-800"
-                  title="Excluir"
-                >
-                  <FaTrash />
-                </button>
-              </div>
+        {lista.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={4} className="text-center px-5 py-4">
+              Nenhum conteúdo encontrado.
             </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          lista.map((conteudo) => (
+            <TableRow key={conteudo.id}>
+              <TableCell className="px-5 py-4 text-start font-medium">
+                <Link to={`/teacher/disciplinas/${disciplinaId}/conteudos/${conteudo.id}`}>
+                  {conteudo.titulo}
+                </Link>
+              </TableCell>
+              <TableCell className="px-5 py-4 text-start text-gray-500">
+                {conteudo.descricao}
+              </TableCell>
+              <TableCell className="px-5 py-4 text-start text-gray-500">
+                {new Date(conteudo.data_termino).toLocaleDateString("pt-BR")}
+              </TableCell>
+              <TableCell className="px-5 py-4 text-start">
+                <div className="flex gap-3">
+                  <Link
+                    to={`/teacher/disciplinas/${disciplinaId}/conteudos/${conteudo.id}`}
+                    className="text-blue-600 hover:text-blue-800"
+                    title="Editar"
+                  >
+                    <FaEdit />
+                  </Link>
+                  <button
+                    className="text-red-600 hover:text-red-800"
+                    title="Excluir"
+                    // Implementar a exclusão se desejar
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );
 
+  if (loading || !disciplina) {
+    return <Spinner />;
+  }
+
   return (
     <>
-      <PageBreadcrumb pageTitle={`Disciplina: ${disciplina.nome}`} />
+      <PageBreadcrumb pageTitle={`Disciplina: ${disciplina.name}`} />
 
-      <div className="hidden mb-6 rounded-xl border border-gray-200 bg-white p-5 dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5 dark:border-white/[0.05] dark:bg-white/[0.03]">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">
           Informações da Disciplina
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* <div>
-            <span className="text-gray-500 text-sm">Período</span>
-            <div className="font-medium">{disciplina.periodo}</div>
-          </div> */}
           <div>
-            <span className="text-gray-500 text-sm">Descrição</span>
-            <div className="font-medium">{disciplina.nome}</div>
+            <span className="text-gray-500 text-sm">Turma</span>
+            <div className="font-medium">{disciplina.turma.name}</div>
           </div>
           <div>
             <span className="text-gray-500 text-sm">Status</span>
             <div>
               <Badge
                 size="sm"
-                color={
-                  disciplina.status === "Ativa"
-                    ? "success"
-                    : disciplina.status === "Planejamento"
-                    ? "warning"
-                    : "error"
-                }
+                color={disciplina.is_active ? "success" : "error"}
               >
-                {disciplina.status}
+                {disciplina.is_active ? "Ativa" : "Encerrada"}
               </Badge>
             </div>
           </div>
@@ -163,7 +172,7 @@ export default function DisciplinaDetails() {
             Conteúdos da Disciplina
           </h2>
           <Link
-            to={`/admin/disciplinas/${disciplina.id}/conteudo`}
+            to={`/teacher/disciplinas/${disciplinaId}/conteudos/novo`}
             className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-md"
           >
             + Novo Conteúdo

@@ -15,7 +15,7 @@ const initialValue: Descendant[] = [
 
 export default function Resumo() {
   const { id } = useParams();
-  const isEditando = Boolean(id);
+  const isEditando = id != 'criar';
 
   const [abaAtiva, setAbaAtiva] = useState<(typeof categoriasAcessibilidade)[number]>("Visual");
 
@@ -135,10 +135,20 @@ export default function Resumo() {
               <label className="block text-sm font-medium mb-1">
                 Resumo
               </label>
-              <RichTextEditor
+               <textarea
+              className="w-full border rounded-md p-3"
+                rows={6}
+                onChange={(e) =>
+                  setResumoAcessibilidade({
+                    ...resumoAcessibilidade,
+                    [abaAtiva]: e.target.value,
+                  })
+                }
+              />
+              {/* <RichTextEditor
                 value={resumoGeral}
                 onChange={(html) => setResumoGeral(html)}
-              />
+              /> */}
             </div>
           </div>
         )}

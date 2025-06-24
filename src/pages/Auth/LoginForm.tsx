@@ -46,9 +46,19 @@ const userTypes = [
 function LoginForm({ role, onSelectRole, onSuccess }) {
   const [activeTab, setActiveTab] = useState(role);
 
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
+
   useEffect(() => {
     onSelectRole(activeTab);
   }, [ activeTab]);
+
+  const handleLogin = () => {
+    onSuccess({
+      email,
+      password
+    })
+  }
 
   return (
     <main className="flex-1 flex flex-col justify-center items-center px-5">
@@ -83,6 +93,8 @@ function LoginForm({ role, onSelectRole, onSuccess }) {
               <input
                 type={activeTab == 'student' ? 'text' : "email"}
                 id="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 className="w-full rounded-lg border border-[#E8EBF0] focus:border-[#3653B4] transition px-4 py-2 text-sm bg-[#F6F8FB] placeholder-[#A4B1C8] focus:outline-none"
                 placeholder={activeTab == 'student' ? 'Seu RA' : "Seu e-mail"}
               />
@@ -96,6 +108,8 @@ function LoginForm({ role, onSelectRole, onSuccess }) {
               <input
                 type="password"
                 id="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 className="w-full rounded-lg border border-[#E8EBF0] focus:border-[#3653B4] transition px-4 py-2 text-sm bg-[#F6F8FB] placeholder-[#A4B1C8] focus:outline-none"
                 placeholder="Digite sua senha"
                 autoComplete="current-password"
@@ -110,7 +124,7 @@ function LoginForm({ role, onSelectRole, onSuccess }) {
 
           <button
             type="button"
-            onClick={onSuccess}
+            onClick={handleLogin}
             className="mt-3 w-full py-3 bg-[#3653B4] hover:bg-[#233366] text-white rounded-xl font-semibold text-base transition shadow focus:outline-none"
           >
             Entrar

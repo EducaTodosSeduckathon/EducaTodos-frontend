@@ -65,6 +65,11 @@ const teacherNavItems: NavItem[] = [
 ];
 const managerNavItems: NavItem[] = [
   {
+    name: "Turmas",
+    path: '/admin/turmas',
+    icon: <FaUsers />,
+  },
+  {
     name: "Disciplinas",
     path: '/admin/disciplinas',
     icon: <TableIcon />,
